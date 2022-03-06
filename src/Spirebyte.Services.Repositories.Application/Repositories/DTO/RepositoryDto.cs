@@ -24,6 +24,6 @@ public class RepositoryDto
     public string Title { get; set; }
     public string Description { get; set; }
     public string ProjectId { get; set; }
-    public IEnumerable<Branch> Branches { get; set; }
+    public List<Branch> Branches { get; set; }
     public DateTime CreatedAt { get; set; }
 }

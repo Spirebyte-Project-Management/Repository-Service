@@ -12,13 +12,11 @@ namespace Spirebyte.Services.Repositories.Application.Repositories.Commands.Hand
 internal sealed class UpdateRepositoryHandler : ICommandHandler<UpdateRepository>
 {
     private readonly IMessageBroker _messageBroker;
-    private readonly IProjectRepository _projectRepository;
     private readonly IRepositoryRepository _repositoryRepository;
 
-    public UpdateRepositoryHandler(IProjectRepository projectRepository, IRepositoryRepository repositoryRepository,
+    public UpdateRepositoryHandler(IRepositoryRepository repositoryRepository,
         IMessageBroker messageBroker)
     {
-        _projectRepository = projectRepository;
         _repositoryRepository = repositoryRepository;
         _messageBroker = messageBroker;
     }
@@ -29,7 +27,7 @@ internal sealed class UpdateRepositoryHandler : ICommandHandler<UpdateRepository
         if (repository is null) throw new RepositoryNotFoundException(command.Id);
 
         var newRepository = new Repository(repository.Id, command.Title, command.Description, repository.ProjectId,
-            repository.Branches, repository.CreatedAt);
+            repository.ReferenceId, repository.Branches, repository.CreatedAt);
         await _repositoryRepository.UpdateAsync(newRepository);
 
         await _messageBroker.PublishAsync(new RepositoryUpdated(newRepository, repository));

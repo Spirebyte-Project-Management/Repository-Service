@@ -8,10 +8,10 @@ using Convey.CQRS.Commands;
 using Partytitan.Convey.Minio.Services.Interfaces;
 using Spirebyte.Services.Repositories.Application.Projects.Exceptions;
 using Spirebyte.Services.Repositories.Application.Repositories.Events;
-using Spirebyte.Services.Repositories.Application.Repositories.Helpers;
 using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfaces;
 using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Entities;
+using Spirebyte.Services.Repositories.Core.Helpers;
 using Spirebyte.Services.Repositories.Core.Repositories;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Commands.Handlers;
@@ -43,12 +43,13 @@ internal sealed class CreateRepositoryHandler : ICommandHandler<CreateRepository
         var repositoryCount = await _repositoryRepository.GetRepositoryCountOfProjectAsync(command.ProjectId);
         var repositoryId = $"{command.ProjectId}-repository-{repositoryCount + 1}";
 
-        var repoPath = RepoPathHelpers.GetCachePathForRepositoryId(repositoryId);
+        var referenceId = Guid.Empty;
+        var repoPath = RepoPathHelpers.GetCachePathForRepositoryId(repositoryId, Guid.Empty);
         LibGit2Sharp.Repository.Init(repoPath, true);
         
         var branches = new List<Branch>();
 
-        var repository = new Repository(repositoryId, command.Title, command.Description, command.ProjectId, branches, command.CreatedAt);
+        var repository = new Repository(repositoryId, command.Title, command.Description, command.ProjectId, referenceId, branches, command.CreatedAt);
         await _repositoryRepository.AddAsync(repository);
 
         await _minioService.UploadDirAsync(repoPath, $"{command.ProjectId}/{repositoryId}");

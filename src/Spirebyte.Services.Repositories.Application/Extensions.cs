@@ -12,6 +12,7 @@ public static class Extensions
     public static IConveyBuilder AddApplication(this IConveyBuilder builder)
     {
         builder.Services.AddSingleton<IRepositoryRequestStorage, RepositoryRequestStorage>();
+        builder.Services.AddSingleton<IRepositoryService, RepositoryService>();
 
         return builder
             .AddCommandHandlers()
