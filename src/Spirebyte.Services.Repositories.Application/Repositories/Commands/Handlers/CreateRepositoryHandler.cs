@@ -44,8 +44,10 @@ internal sealed class CreateRepositoryHandler : ICommandHandler<CreateRepository
         var repositoryId = $"{command.ProjectId}-repository-{repositoryCount + 1}";
 
         var referenceId = Guid.Empty;
-        var repoPath = RepoPathHelpers.GetCachePathForRepositoryId(repositoryId, Guid.Empty);
+        var repoPath = RepoPathHelpers.GetCachePathForRepositoryId(repositoryId);
         LibGit2Sharp.Repository.Init(repoPath, true);
+        
+        RepoPathHelpers.UpdateRepoCacheReference(repositoryId, referenceId);
         
         var branches = new List<Branch>();
 

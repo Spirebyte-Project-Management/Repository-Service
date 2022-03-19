@@ -1,0 +1,37 @@
+﻿version: "3.7"
+
+services:
+  spirebyte-repository-acceptance:
+    build: .
+    container_name: spirebyte-repository-acceptance
+    ports:
+      - "5909:80"
+    environment:
+      ASPNETCORE_ENVIRONMENT: 'Acceptance'
+    networks:
+      - spirebyte-repository-tests
+      
+  spirebyte-repository-acceptance-mongo:
+    image: mongo
+    container_name: spirebyte-repository-acceptance-mongo
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=4UeQAJgTqbCwjPCH
+    networks:
+      - spirebyte-repository-tests
+    ports:
+      - "5899:27017"
+
+  spirebyte-repository-acceptance-rabbitmq:
+    build: ./rabbitmq
+    container_name: spirebyte-repository-acceptance-rabbitmq
+    restart: unless-stopped
+    networks:
+      - spirebyte-repository-tests
+    ports:
+      - "5898:5672"
+
+networks:
+  spirebyte-repository-tests:
+    name: spirebyte--repository-tests-network

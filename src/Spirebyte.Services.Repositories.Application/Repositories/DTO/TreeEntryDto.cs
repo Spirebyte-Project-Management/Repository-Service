@@ -3,9 +3,9 @@ using Commit = Spirebyte.Services.Repositories.Core.Entities.Commit;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.DTO;
 
-public class FileDto
+public class TreeEntryDto
 {
-    public FileDto(TreeEntry treeEntry, Commit commit)
+    public TreeEntryDto(TreeEntry treeEntry, Commit commit)
     {
         Name = treeEntry.Name;
         Path = treeEntry.Path;

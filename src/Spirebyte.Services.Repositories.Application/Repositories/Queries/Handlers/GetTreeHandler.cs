@@ -34,11 +34,10 @@ public class GetTreeHandler : IQueryHandler<GetTree, TreeDto>
         await _repositoryService.EnsureLatestRepositoryIsCached(repository);
 
         var repo = new Repository(RepoPathHelpers.GetCachePathForRepository(repository));
-
-        var path = string.IsNullOrEmpty(query.Path) ? "/" : query.Path;
+        
         if (!repo.Commits.Any())
         {
-            return new TreeDto(path);
+            return new TreeDto(query.Path);
         }
 
         Commit searchCommit = null;
@@ -79,6 +78,6 @@ public class GetTreeHandler : IQueryHandler<GetTree, TreeDto>
 
 
         var ancestors = repo.Commits.QueryBy(new CommitFilter { IncludeReachableFrom = searchCommit, SortBy = CommitSortStrategies.Topological | CommitSortStrategies.Reverse }).ToList();
-        return new TreeDto(searchCommit, ancestors, tree, path);
+        return new TreeDto(searchCommit, ancestors, tree, query.Path);
     }
 }

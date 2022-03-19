@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Convey.WebApi;
 using Convey.WebApi.CQRS;
 using Microsoft.AspNetCore.Http;
@@ -27,6 +28,7 @@ public class RepositoryTreeController : BaseController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<TreeDto>> BrowseAsync(string repositoryId, [FromQuery] GetTree query)
     {
+        query.Path = Uri.UnescapeDataString(query.Path ?? string.Empty);
         return Ok(await _dispatcher.QueryAsync(query.Bind(q => q.RepositoryId, repositoryId)));
     }
 }
