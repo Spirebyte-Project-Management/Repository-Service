@@ -7,7 +7,6 @@ public class GetTree : IQuery<TreeDto>
 {
     public GetTree()
     {
-        
     }
 
     public GetTree(string projectId, string repositoryId, string commitSha, string branch, string path)
@@ -18,6 +17,7 @@ public class GetTree : IQuery<TreeDto>
         Branch = branch;
         Path = path;
     }
+
     public string ProjectId { get; set; }
     public string RepositoryId { get; set; }
     public string? CommitSha { get; set; }

@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Spirebyte.Services.Repositories.Core.Enums;
 using Spirebyte.Services.Repositories.Core.Exceptions;
 
 namespace Spirebyte.Services.Repositories.Core.Entities;
@@ -26,20 +24,20 @@ public class Repository
         CreatedAt = createdAt;
     }
 
+    public string Id { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public string ProjectId { get; set; }
+
+    public Guid ReferenceId { get; set; }
+
+    public List<Branch> Branches { get; set; }
+    public DateTime CreatedAt { get; set; }
+
     public Guid ChangeReferenceId()
     {
         ReferenceId = Guid.NewGuid();
 
         return ReferenceId;
     }
- 
-    public string Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string ProjectId { get; set; }
-    
-    public Guid ReferenceId { get; set; }
-    
-    public List<Branch> Branches { get; set; }
-    public DateTime CreatedAt { get; set; }
 }

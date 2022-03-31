@@ -12,10 +12,12 @@ public class KeyAlreadyExistsException : AppException
     {
         RepositoryId = repositoryId;
     }
-    protected KeyAlreadyExistsException(SerializationInfo info, StreamingContext context) 
+
+    protected KeyAlreadyExistsException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
     }
+
     public override string Code { get; } = "key_already_exists";
     public string RepositoryId { get; }
 }

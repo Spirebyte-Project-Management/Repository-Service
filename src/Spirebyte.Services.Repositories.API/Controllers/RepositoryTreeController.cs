@@ -20,7 +20,7 @@ public class RepositoryTreeController : BaseController
     {
         _dispatcher = dispatcher;
     }
-    
+
     [HttpGet]
     [SwaggerOperation("Browse Repository Tree")]
     [ProducesResponseType(StatusCodes.Status200OK)]

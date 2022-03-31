@@ -1,0 +1,11 @@
+﻿{
+  "DockerComposeFileName": "docker-compose.acceptance.yml",
+  "mongo": {
+    "connectionString": "mongodb://root:4UeQAJgTqbCwjPCH@localhost:5899/?authSource=admin",
+    "database": "spirebyte-repositories-service",
+    "seed": false
+  },
+  "Spirebyte.Services.Repositories.API": {
+    "TestingAddress": "http://localhost:5909"
+  }
+}

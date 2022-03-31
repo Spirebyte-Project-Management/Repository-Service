@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.Extensions.Caching.Memory;
 using Spirebyte.Services.Repositories.Application.Repositories.DTO;
 using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfaces;
@@ -24,7 +23,7 @@ public class RepositoryRequestStorage : IRepositoryRequestStorage
             Title = repository.Title,
             Description = repository.Description,
             ProjectId = repository.ProjectId,
-            CreatedAt = repository.CreatedAt,
+            CreatedAt = repository.CreatedAt
         };
 
         _cache.Set(GetKey(referenceId), issueDto, TimeSpan.FromSeconds(5));

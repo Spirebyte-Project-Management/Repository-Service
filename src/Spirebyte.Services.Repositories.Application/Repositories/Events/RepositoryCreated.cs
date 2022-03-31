@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Convey.CQRS.Events;
 using Spirebyte.Services.Repositories.Core.Entities;
 

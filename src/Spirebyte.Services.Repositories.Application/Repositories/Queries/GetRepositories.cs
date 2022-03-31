@@ -8,8 +8,8 @@ public class GetRepositories : IQuery<IEnumerable<RepositoryDto>>
 {
     public GetRepositories()
     {
-        
     }
+
     public GetRepositories(string? projectId = null)
     {
         ProjectId = projectId;

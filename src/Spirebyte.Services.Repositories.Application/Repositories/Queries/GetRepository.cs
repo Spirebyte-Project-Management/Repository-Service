@@ -7,8 +7,8 @@ public class GetRepository : IQuery<RepositoryDto>
 {
     public GetRepository()
     {
-        
     }
+
     public GetRepository(string repositoryId)
     {
         RepositoryId = repositoryId;

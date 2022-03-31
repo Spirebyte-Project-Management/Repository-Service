@@ -12,9 +12,10 @@ public class TreeEntryDto
         Mode = treeEntry.Mode;
         Commit = commit;
     }
+
     public string Name { get; set; }
     public string Path { get; set; }
     public Mode Mode { get; set; }
-    
+
     public Commit Commit { get; set; }
 }

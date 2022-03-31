@@ -1,4 +1,4 @@
-﻿version: "3.7"
+﻿version: "3.8"
 
 services:
   spirebyte-repository-acceptance:
@@ -6,31 +6,47 @@ services:
     container_name: spirebyte-repository-acceptance
     ports:
       - "5909:80"
+    depends_on: 
+      spirebyte-repository-acceptance-mongo:
+        condition: service_started
+      spirebyte-repository-acceptance-rabbitmq:
+        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: 'Acceptance'
     networks:
       - spirebyte-repository-tests
-      
+  
   spirebyte-repository-acceptance-mongo:
     image: mongo
     container_name: spirebyte-repository-acceptance-mongo
-    restart: unless-stopped
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=4UeQAJgTqbCwjPCH
     networks:
       - spirebyte-repository-tests
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo spirebyte-repository-acceptance-mongo:27017/test --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     ports:
       - "5899:27017"
 
   spirebyte-repository-acceptance-rabbitmq:
-    build: ./rabbitmq
+    image: rabbitmq
     container_name: spirebyte-repository-acceptance-rabbitmq
-    restart: unless-stopped
     networks:
       - spirebyte-repository-tests
     ports:
       - "5898:5672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_running
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
 
 networks:
   spirebyte-repository-tests:

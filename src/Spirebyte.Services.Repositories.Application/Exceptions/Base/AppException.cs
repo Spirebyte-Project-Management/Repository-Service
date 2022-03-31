@@ -9,8 +9,8 @@ public abstract class AppException : Exception
     protected AppException(string message) : base(message)
     {
     }
-    
-    protected AppException(SerializationInfo info, StreamingContext context) 
+
+    protected AppException(SerializationInfo info, StreamingContext context)
         : base(info, context)
     {
     }

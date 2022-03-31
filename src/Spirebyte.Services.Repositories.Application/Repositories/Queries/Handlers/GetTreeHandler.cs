@@ -1,23 +1,21 @@
 ﻿using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Convey.CQRS.Queries;
 using LibGit2Sharp;
-using Spirebyte.Services.Repositories.Application.Projects.Exceptions;
 using Spirebyte.Services.Repositories.Application.Repositories.DTO;
-using Spirebyte.Services.Repositories.Application.Repositories.Exceptions;
 using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Helpers;
 using Spirebyte.Services.Repositories.Core.Repositories;
-using RepositoryNotFoundException = Spirebyte.Services.Repositories.Application.Repositories.Exceptions.RepositoryNotFoundException;
+using RepositoryNotFoundException =
+    Spirebyte.Services.Repositories.Application.Repositories.Exceptions.RepositoryNotFoundException;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Queries.Handlers;
 
 public class GetTreeHandler : IQueryHandler<GetTree, TreeDto>
 {
-    private readonly IRepositoryService _repositoryService;
     private readonly IRepositoryRepository _repositoryRepository;
+    private readonly IRepositoryService _repositoryService;
 
     public GetTreeHandler(IRepositoryService repositoryService, IRepositoryRepository repositoryRepository)
     {
@@ -34,28 +32,16 @@ public class GetTreeHandler : IQueryHandler<GetTree, TreeDto>
         await _repositoryService.EnsureLatestRepositoryIsCached(repository);
 
         var repo = new Repository(RepoPathHelpers.GetCachePathForRepository(repository));
-        
-        if (!repo.Commits.Any())
-        {
-            return new TreeDto(query.Path);
-        }
+
+        if (!repo.Commits.Any()) return new TreeDto(query.Path);
 
         Commit searchCommit = null;
-        if (!string.IsNullOrWhiteSpace(query.CommitSha))
-        {
-            searchCommit = repo.Lookup<Commit>(query.CommitSha);
-        }
+        if (!string.IsNullOrWhiteSpace(query.CommitSha)) searchCommit = repo.Lookup<Commit>(query.CommitSha);
 
-        if (!string.IsNullOrWhiteSpace(query.Branch))
-        {
-            searchCommit = repo.Branches[query.Branch].Tip;
-        }
+        if (!string.IsNullOrWhiteSpace(query.Branch)) searchCommit = repo.Branches[query.Branch].Tip;
 
         // Fallback to latest commit of default branch
-        if (searchCommit == null)
-        {
-            searchCommit = repo.Head.Tip;
-        }
+        if (searchCommit == null) searchCommit = repo.Head.Tip;
 
         // File trees are bound to commits
         // When no path is defined then we use the base tree of a commit
@@ -68,16 +54,17 @@ public class GetTreeHandler : IQueryHandler<GetTree, TreeDto>
         {
             var treeTarget = searchCommit[query.Path];
             // if not a file tree then return null
-            if (treeTarget.TargetType != TreeEntryTargetType.Tree)
-            {
-                return null;
-            }
+            if (treeTarget.TargetType != TreeEntryTargetType.Tree) return null;
 
             tree = treeTarget.Target as Tree;
         }
 
 
-        var ancestors = repo.Commits.QueryBy(new CommitFilter { IncludeReachableFrom = searchCommit, SortBy = CommitSortStrategies.Topological | CommitSortStrategies.Reverse }).ToList();
+        var ancestors = repo.Commits.QueryBy(new CommitFilter
+        {
+            IncludeReachableFrom = searchCommit,
+            SortBy = CommitSortStrategies.Topological | CommitSortStrategies.Reverse
+        }).ToList();
         return new TreeDto(searchCommit, ancestors, tree, query.Path);
     }
 }
