@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Spirebyte.Services.Repositories.Core.Exceptions;
+using Spirebyte.Services.Repositories.Core.Helpers;
 
 namespace Spirebyte.Services.Repositories.Core.Entities;
 
@@ -34,6 +37,14 @@ public class Repository
     public List<Branch> Branches { get; set; }
     public DateTime CreatedAt { get; set; }
 
+    public Task UpdateRepositoryFromGit()
+    {
+        var repoPath = RepoPathHelpers.GetCachePathForRepositoryId(Id);
+        var repoInstance = new LibGit2Sharp.Repository(repoPath);
+        Branches = repoInstance.Branches.Select(b => new Branch(b)).ToList();
+        return Task.CompletedTask;
+    }
+    
     public Guid ChangeReferenceId()
     {
         ReferenceId = Guid.NewGuid();
