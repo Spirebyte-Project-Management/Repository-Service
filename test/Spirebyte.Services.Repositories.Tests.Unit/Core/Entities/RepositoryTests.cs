@@ -15,7 +15,7 @@ public class RepositoryTests
         var fakedRepository = RepositoryFaker.Instance.Generate();
 
         var repository = new Repository(fakedRepository.Id, fakedRepository.Title, fakedRepository.Description,
-            fakedRepository.ProjectId, fakedRepository.ReferenceId, fakedRepository.Branches,
+            fakedRepository.ProjectId, fakedRepository.ReferenceId, fakedRepository.Branches, fakedRepository.PullRequests,
             fakedRepository.CreatedAt);
 
         repository.Should().NotBeNull();
@@ -25,6 +25,7 @@ public class RepositoryTests
         repository.ProjectId.Should().Be(fakedRepository.ProjectId);
         repository.ReferenceId.Should().Be(fakedRepository.ReferenceId);
         repository.Branches.Should().Equal(fakedRepository.Branches);
+        repository.PullRequests.Should().Equal(fakedRepository.PullRequests);
         repository.CreatedAt.Should().Be(fakedRepository.CreatedAt);
     }
 
@@ -35,7 +36,7 @@ public class RepositoryTests
         var fakedRepository = RepositoryFaker.Instance.Generate();
 
         Action act = () => new Repository(string.Empty, fakedRepository.Title, fakedRepository.Description,
-            fakedRepository.ProjectId, fakedRepository.ReferenceId, fakedRepository.Branches,
+            fakedRepository.ProjectId, fakedRepository.ReferenceId, fakedRepository.Branches, fakedRepository.PullRequests,
             fakedRepository.CreatedAt);
         act.Should().Throw<InvalidIdException>();
     }
@@ -46,7 +47,7 @@ public class RepositoryTests
         var fakedRepository = RepositoryFaker.Instance.Generate();
 
         Action act = () => new Repository(fakedRepository.Id, fakedRepository.Title, fakedRepository.Description,
-            string.Empty, fakedRepository.ReferenceId, fakedRepository.Branches, fakedRepository.CreatedAt);
+            string.Empty, fakedRepository.ReferenceId, fakedRepository.Branches, fakedRepository.PullRequests, fakedRepository.CreatedAt);
         act.Should().Throw<InvalidProjectIdException>();
     }
 
@@ -56,7 +57,7 @@ public class RepositoryTests
         var fakedRepository = RepositoryFaker.Instance.Generate();
 
         Action act = () => new Repository(fakedRepository.Id, string.Empty, fakedRepository.Description,
-            fakedRepository.ProjectId, fakedRepository.ReferenceId, fakedRepository.Branches,
+            fakedRepository.ProjectId, fakedRepository.ReferenceId, fakedRepository.Branches, fakedRepository.PullRequests,
             fakedRepository.CreatedAt);
         act.Should().Throw<InvalidTitleException>();
     }

@@ -17,6 +17,7 @@ public class RepositoryDto
         Description = repository.Description;
         ProjectId = repository.ProjectId;
         Branches = repository.Branches;
+        PullRequests = repository.PullRequests;
         CreatedAt = repository.CreatedAt;
     }
 
@@ -25,5 +26,6 @@ public class RepositoryDto
     public string Description { get; set; }
     public string ProjectId { get; set; }
     public List<Branch> Branches { get; set; }
+    public List<PullRequest> PullRequests { get; set; }
     public DateTime CreatedAt { get; set; }
 }

@@ -27,7 +27,7 @@ internal sealed class UpdateRepositoryHandler : ICommandHandler<UpdateRepository
         if (repository is null) throw new RepositoryNotFoundException(command.Id);
 
         var newRepository = new Repository(repository.Id, command.Title, command.Description, repository.ProjectId,
-            repository.ReferenceId, repository.Branches, repository.CreatedAt);
+            repository.ReferenceId, repository.Branches, repository.PullRequests, repository.CreatedAt);
         await _repositoryRepository.UpdateAsync(newRepository);
 
         await _messageBroker.PublishAsync(new RepositoryUpdated(newRepository, repository));

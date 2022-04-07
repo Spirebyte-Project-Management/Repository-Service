@@ -8,7 +8,7 @@ internal static class RepositoryMappers
     public static Repository AsEntity(this RepositoryDocument document)
     {
         return new Repository(document.Id, document.Title, document.Description, document.ProjectId,
-            document.ReferenceId, document.Branches, document.CreatedAt);
+            document.ReferenceId, document.Branches, document.PullRequests, document.CreatedAt);
     }
 
     public static RepositoryDocument AsDocument(this Repository entity)
@@ -20,6 +20,7 @@ internal static class RepositoryMappers
             Description = entity.Description,
             ProjectId = entity.ProjectId,
             Branches = entity.Branches,
+            PullRequests = entity.PullRequests,
             ReferenceId = entity.ReferenceId,
             CreatedAt = entity.CreatedAt
         };
@@ -34,6 +35,7 @@ internal static class RepositoryMappers
             Description = document.Description,
             ProjectId = document.ProjectId,
             Branches = document.Branches,
+            PullRequests = document.PullRequests,
             CreatedAt = document.CreatedAt
         };
     }

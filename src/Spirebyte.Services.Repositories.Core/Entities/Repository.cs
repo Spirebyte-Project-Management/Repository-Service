@@ -10,7 +10,7 @@ namespace Spirebyte.Services.Repositories.Core.Entities;
 public class Repository
 {
     public Repository(string id, string title, string description, string projectId, Guid referenceId,
-        List<Branch> branches, DateTime createdAt)
+        List<Branch> branches, List<PullRequest> pullRequests, DateTime createdAt)
     {
         if (string.IsNullOrWhiteSpace(id)) throw new InvalidIdException(id);
 
@@ -24,6 +24,7 @@ public class Repository
         ProjectId = projectId;
         ReferenceId = referenceId;
         Branches = branches;
+        PullRequests = pullRequests ?? new List<PullRequest>();
         CreatedAt = createdAt;
     }
 
@@ -35,6 +36,7 @@ public class Repository
     public Guid ReferenceId { get; set; }
 
     public List<Branch> Branches { get; set; }
+    public List<PullRequest> PullRequests { get; set; }
     public DateTime CreatedAt { get; set; }
 
     public Task UpdateRepositoryFromGit()

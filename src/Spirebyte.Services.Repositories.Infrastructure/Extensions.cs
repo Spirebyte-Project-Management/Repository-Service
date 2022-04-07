@@ -43,6 +43,7 @@ public static class Extensions
     {
         builder.Services.AddTransient<IMessageBroker, MessageBroker>();
         builder.Services.AddSingleton<IRepositoryRepository, RepositoryRepository>();
+        builder.Services.AddSingleton<IPullRequestRepository, PullRequestRepository>();
         builder.Services.AddSingleton<IProjectRepository, ProjectRepository>();
         builder.Services.AddTransient<IIdentityApiHttpClient, IdentityApiHttpClient>();
         builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
