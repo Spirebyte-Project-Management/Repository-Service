@@ -3,9 +3,9 @@ using Spirebyte.Services.Repositories.Core.Enums;
 
 namespace Spirebyte.Services.Repositories.Core.Entities;
 
-public class PullRequestActions
+public class PullRequestAction
 {
-    public PullRequestActions(DateTime createdAt, PullRequestActionType type, string message, string[] commits, string userId)
+    public PullRequestAction(DateTime createdAt, PullRequestActionType type, string message, string[] commits, Guid userId)
     {
         CreatedAt = createdAt;
         Type = type;
@@ -17,5 +17,5 @@ public class PullRequestActions
     public PullRequestActionType Type { get; set; }
     public string Message { get; set; }
     public string[] Commits { get; set; }
-    public string UserId { get; set; }
+    public Guid UserId { get; set; }
 }

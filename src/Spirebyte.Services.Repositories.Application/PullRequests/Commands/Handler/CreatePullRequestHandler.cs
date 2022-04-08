@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Convey.CQRS.Commands;
 using LibGit2Sharp;
+using Spirebyte.Services.Repositories.Application.PullRequests.Events;
+using Spirebyte.Services.Repositories.Application.PullRequests.Services.Interfaces;
 using Spirebyte.Services.Repositories.Application.Repositories.Events;
 using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Entities;
@@ -16,13 +18,15 @@ public class CreatePullRequestHandler : ICommandHandler<CreatePullRequest>
     private readonly IMessageBroker _messageBroker;
     private readonly IRepositoryRepository _repositoryRepository;
     private readonly IPullRequestRepository _pullRequestRepository;
+    private readonly IPullRequestRequestStorage _pullRequestRequestStorage;
 
     public CreatePullRequestHandler(IRepositoryRepository repositoryRepository,
-        IMessageBroker messageBroker, IPullRequestRepository pullRequestRepository)
+        IMessageBroker messageBroker, IPullRequestRepository pullRequestRepository, IPullRequestRequestStorage pullRequestRequestStorage)
     {
         _repositoryRepository = repositoryRepository;
         _messageBroker = messageBroker;
         _pullRequestRepository = pullRequestRepository;
+        _pullRequestRequestStorage = pullRequestRequestStorage;
     }
 
     public async Task HandleAsync(CreatePullRequest command, CancellationToken cancellationToken = default)
@@ -33,9 +37,11 @@ public class CreatePullRequestHandler : ICommandHandler<CreatePullRequest>
         var pullRequestCount = await _pullRequestRepository.GetPullRequestCountOfRepositoryAsync(command.RepositoryId);
         
         var newPullRequest = new PullRequest(pullRequestCount + 1, command.Name, command.Description, command.Status,
-            new List<PullRequestActions>(), command.Head, command.Branch, DateTime.Now);
+            new List<PullRequestAction>(), command.Head, command.Branch, DateTime.Now);
         await _pullRequestRepository.AddAsync(repository.Id, newPullRequest);
 
-        //await _messageBroker.PublishAsync(new RepositoryUpdated(newRepository, repository));
+        _pullRequestRequestStorage.SetPullRequest(command.ReferenceId, newPullRequest);
+
+        await _messageBroker.PublishAsync(new PullRequestCreated(newPullRequest, repository.Id));
     }
 }

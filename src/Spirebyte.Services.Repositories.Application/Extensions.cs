@@ -6,6 +6,8 @@ using Spirebyte.Services.Repositories.Application.Background;
 using Spirebyte.Services.Repositories.Application.Background.Interfaces;
 using Spirebyte.Services.Repositories.Application.Branches.Services;
 using Spirebyte.Services.Repositories.Application.Branches.Services.Interfaces;
+using Spirebyte.Services.Repositories.Application.PullRequests.Services;
+using Spirebyte.Services.Repositories.Application.PullRequests.Services.Interfaces;
 using Spirebyte.Services.Repositories.Application.Repositories.Services;
 using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfaces;
 
@@ -19,6 +21,8 @@ public static class Extensions
         builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();  
         
         builder.Services.AddSingleton<IBranchRequestStorage, BranchRequestStorage>();
+        builder.Services.AddSingleton<IPullRequestRequestStorage, PullRequestRequestStorage>();
+        builder.Services.AddSingleton<IPullRequestActionRequestStorage, PullRequestActionRequestStorage>();
         builder.Services.AddSingleton<IRepositoryRequestStorage, RepositoryRequestStorage>();
         builder.Services.AddSingleton<IRepositoryService, RepositoryService>();
 
