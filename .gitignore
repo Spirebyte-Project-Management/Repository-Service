@@ -333,3 +333,6 @@ logs/
 /src/.sonarqube
 /src/runSonarQube.bat
 Certs/
+
+TestResult
+opencover.xml
