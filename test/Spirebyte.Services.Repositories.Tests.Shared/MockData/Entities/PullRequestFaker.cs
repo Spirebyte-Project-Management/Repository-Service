@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Spirebyte.Services.Repositories.Application.Branches.Commands;
 using Spirebyte.Services.Repositories.Core.Entities;
 using Spirebyte.Services.Repositories.Core.Enums;
 
@@ -8,7 +9,7 @@ public class PullRequestFaker : Faker<PullRequest>
 {
     private PullRequestFaker()
     {
-        CustomInstantiator(_ => new PullRequest(default, default, default, default, default,default,default, default));
+        CustomInstantiator(_ => new PullRequest(default, default, default, default, default,default,default, default, default, default));
         RuleFor(r => r.Id, f => f.UniqueIndex);
         RuleFor(r => r.Name, f => f.Random.Word());
         RuleFor(r => r.Description, f => f.Random.Words(7));
@@ -16,7 +17,9 @@ public class PullRequestFaker : Faker<PullRequest>
         RuleFor(r => r.Actions, f => PullRequestActionFaker.Instance.Generate(8));
         RuleFor(r => r.Head, f => f.Random.Word());
         RuleFor(r => r.Branch, f =>  f.Random.Word());
+        RuleFor(r => r.UserId, f =>  f.Random.Guid());
         RuleFor(r => r.CreatedAt, f => f.Date.Past(1));
+        RuleFor(r => r.UpdatedAt, f => f.Date.Past(1));
     }
 
     public static PullRequestFaker Instance => new();

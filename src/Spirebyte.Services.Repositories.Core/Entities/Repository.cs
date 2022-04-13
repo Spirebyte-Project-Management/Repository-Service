@@ -24,7 +24,7 @@ public class Repository
         ProjectId = projectId;
         ReferenceId = referenceId;
         Branches = branches;
-        PullRequests = pullRequests ?? new List<PullRequest>();
+        PullRequests = pullRequests;
         CreatedAt = createdAt;
     }
 

@@ -44,8 +44,8 @@ public class CreatePullRequestCommentHandler : ICommandHandler<CreatePullRequest
         var pullRequestAction = new PullRequestAction(DateTime.Now, PullRequestActionType.Comment, command.Message,
             Array.Empty<string>(), _appContext.Identity.Id);
         
-        pullRequest.Actions.Add(pullRequestAction);
-        
+        pullRequest.AddAction(pullRequestAction);
+
         await _pullRequestRepository.UpdateAsync(repository.Id, pullRequest);
 
         _pullRequestActionRequestStorage.SetPullRequestAction(command.ReferenceId, pullRequestAction);
