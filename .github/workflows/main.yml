@@ -43,7 +43,7 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
         dotnet tool install --global dotnet-sonarscanner
-        dotnet sonarscanner begin /k:"Spirebyte-Project-Management_Repository-Service" /o:"spirebyte-project-management" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+        dotnet sonarscanner begin /k:"Spirebyte-Project-Management_Repository-Service" /o:"spirebyte-project-management" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
 
     - name: Install dependencies
       run: dotnet restore
@@ -52,7 +52,13 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test `
+          --no-restore `
+          --verbosity normal  `
+          --collect:"XPlat Code Coverage" `
+          --results-directory TestResults/ `
+          --logger "trx;LogFileName=unittests.trx" `
+          --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
      
     - name: End Sonar scan
       env:
