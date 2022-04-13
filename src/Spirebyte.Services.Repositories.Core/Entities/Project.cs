@@ -10,5 +10,4 @@ public class Project
     }
 
     public string Id { get; }
-    public ICollection<string> Issues { get; set; }
 }

@@ -5,7 +5,7 @@ using Spirebyte.Services.Repositories.Core.Enums;
 
 namespace Spirebyte.Services.Repositories.Tests.Shared.MockData.Entities;
 
-public class PullRequestFaker : Faker<PullRequest>
+public sealed class PullRequestFaker : Faker<PullRequest>
 {
     private PullRequestFaker()
     {

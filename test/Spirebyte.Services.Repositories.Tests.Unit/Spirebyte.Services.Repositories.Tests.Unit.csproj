@@ -31,4 +31,8 @@
         <ProjectReference Include="..\Spirebyte.Services.Repositories.Tests.Shared\Spirebyte.Services.Repositories.Tests.Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Application\Branches\Commands" />
+    </ItemGroup>
+
 </Project>
