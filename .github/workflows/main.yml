@@ -52,13 +52,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test `
-          --no-restore `
-          --verbosity normal  `
-          --collect:"XPlat Code Coverage" `
-          --results-directory TestResults/ `
-          --logger "trx;LogFileName=unittests.trx" `
-          --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+      run: dotnet test --no-restore --verbosity normal  --collect:"XPlat Code Coverage" --results-directory TestResults/ --logger "trx;LogFileName=unittests.trx" --DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
      
     - name: End Sonar scan
       env:
