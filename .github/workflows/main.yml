@@ -49,7 +49,6 @@ jobs:
       run: dotnet restore
       
     - name: Build
-      shell: powershell
       run: dotnet build --configuration Release --no-restore
 
     - name: Test
