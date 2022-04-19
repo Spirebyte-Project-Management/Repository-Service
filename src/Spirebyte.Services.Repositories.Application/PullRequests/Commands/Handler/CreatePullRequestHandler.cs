@@ -9,6 +9,7 @@ using Spirebyte.Services.Repositories.Application.PullRequests.Services.Interfac
 using Spirebyte.Services.Repositories.Application.Repositories.Events;
 using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Entities;
+using Spirebyte.Services.Repositories.Core.Enums;
 using Spirebyte.Services.Repositories.Core.Repositories;
 using Spirebyte.Shared.Contexts.Interfaces;
 
@@ -43,6 +44,11 @@ public class CreatePullRequestHandler : ICommandHandler<CreatePullRequest>
         
         var newPullRequest = new PullRequest(pullRequestCount + 1, command.Name, command.Description, command.Status,
             new List<PullRequestAction>(), command.Head, command.Branch, _appContext.Identity.Id, creationTime, creationTime);
+
+        var descriptionComment = new PullRequestAction(creationTime, PullRequestActionType.Comment, command.Description,
+            Array.Empty<string>(), _appContext.Identity.Id);
+        newPullRequest.AddAction(descriptionComment);
+        
         await _pullRequestRepository.AddAsync(repository.Id, newPullRequest);
 
         _pullRequestRequestStorage.SetPullRequest(command.ReferenceId, newPullRequest);

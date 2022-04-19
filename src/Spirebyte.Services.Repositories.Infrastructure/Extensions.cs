@@ -11,6 +11,8 @@ using Convey.MessageBrokers.CQRS;
 using Convey.MessageBrokers.Outbox;
 using Convey.MessageBrokers.Outbox.Mongo;
 using Convey.MessageBrokers.RabbitMQ;
+using Convey.Metrics.AppMetrics;
+using Convey.Metrics.Prometheus;
 using Convey.Persistence.MongoDB;
 using Convey.Security;
 using Convey.Tracing.Jaeger;
@@ -69,6 +71,7 @@ public static class Extensions
             .AddMongoRepository<RepositoryDocument, string>("repositories")
             .AddWebApiSwaggerDocs()
             .AddMinio()
+            .AddPrometheus()
             .AddSecurity();
     }
 
@@ -81,6 +84,7 @@ public static class Extensions
             .UseAccessTokenValidator()
             .UsePublicContracts<ContractAttribute>()
             .UseAuthentication()
+            .UsePrometheus()
             .UseRabbitMq()
             .SubscribeCommand<CreateRepository>()
             .SubscribeEvent<ProjectCreated>();
