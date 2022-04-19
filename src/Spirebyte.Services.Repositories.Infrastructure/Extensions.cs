@@ -71,7 +71,7 @@ public static class Extensions
             .AddMongoRepository<RepositoryDocument, string>("repositories")
             .AddWebApiSwaggerDocs()
             .AddMinio()
-            .AddPrometheus()
+            .AddMetrics()
             .AddSecurity();
     }
 
@@ -84,7 +84,7 @@ public static class Extensions
             .UseAccessTokenValidator()
             .UsePublicContracts<ContractAttribute>()
             .UseAuthentication()
-            .UsePrometheus()
+            .UseMetrics()
             .UseRabbitMq()
             .SubscribeCommand<CreateRepository>()
             .SubscribeEvent<ProjectCreated>();
