@@ -1,4 +1,4 @@
-﻿namespace Spirebyte.Services.Repositories.Tests.Acceptance.Authentication;
+﻿namespace Spirebyte.Services.Repositories.Tests.Shared;
 
 public class AuthDto
 {

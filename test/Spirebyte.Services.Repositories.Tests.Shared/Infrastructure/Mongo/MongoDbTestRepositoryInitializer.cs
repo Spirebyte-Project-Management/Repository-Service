@@ -8,7 +8,7 @@ using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
-namespace Spirebyte.Services.Repositories.Tests.Shared.Infrastructure;
+namespace Spirebyte.Services.Repositories.Tests.Shared.Infrastructure.Mongo;
 
 internal sealed class MongoDbTestRepositoryInitializer
 {

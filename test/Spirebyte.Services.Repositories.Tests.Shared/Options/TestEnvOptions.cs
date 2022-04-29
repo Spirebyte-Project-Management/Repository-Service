@@ -1,4 +1,4 @@
-﻿namespace Spirebyte.Services.Repositories.Tests.Shared.Helpers;
+﻿namespace Spirebyte.Services.Repositories.Tests.Shared.Options;
 
 public class TestEnvOptions
 {

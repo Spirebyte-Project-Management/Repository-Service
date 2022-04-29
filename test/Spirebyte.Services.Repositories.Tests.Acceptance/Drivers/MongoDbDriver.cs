@@ -1,6 +1,7 @@
 ﻿using Spirebyte.Services.Repositories.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Repositories.Tests.Shared.Const;
 using Spirebyte.Services.Repositories.Tests.Shared.Infrastructure;
+using Spirebyte.Services.Repositories.Tests.Shared.Infrastructure.Mongo;
 
 namespace Spirebyte.Services.Repositories.Tests.Acceptance.Drivers;
 

@@ -1,8 +1,9 @@
-﻿using Convey.Auth;
+﻿using System;
+using System.Collections.Generic;
+using Convey.Auth;
 using Spirebyte.Services.Repositories.Tests.Shared.Const;
-using Spirebyte.Services.Repositories.Tests.Shared.Helpers;
 
-namespace Spirebyte.Services.Repositories.Tests.Acceptance.Authentication;
+namespace Spirebyte.Services.Repositories.Tests.Shared.Helpers;
 
 public static class AuthHelper
 {

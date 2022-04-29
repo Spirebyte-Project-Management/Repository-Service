@@ -2,8 +2,8 @@
 using RestSharp;
 using RestSharp.Authenticators;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands;
-using Spirebyte.Services.Repositories.Tests.Acceptance.Authentication;
 using Spirebyte.Services.Repositories.Tests.Shared.Helpers;
+using Spirebyte.Services.Repositories.Tests.Shared.Options;
 
 namespace Spirebyte.Services.Repositories.Tests.Acceptance.API;
 

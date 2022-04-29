@@ -1,10 +1,13 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using Convey.Auth;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Spirebyte.Services.Repositories.Tests.Acceptance.Authentication;
+namespace Spirebyte.Services.Repositories.Tests.Shared.Helpers;
 
 public class AuthManager
 {

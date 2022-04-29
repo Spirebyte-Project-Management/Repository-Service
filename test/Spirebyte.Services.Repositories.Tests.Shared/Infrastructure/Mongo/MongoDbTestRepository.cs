@@ -7,10 +7,9 @@ using Convey.Persistence.MongoDB;
 using Convey.Types;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using Spirebyte.Services.Repositories.Tests.Shared.Fixtures;
 using Spirebyte.Services.Repositories.Tests.Shared.Helpers;
 
-namespace Spirebyte.Services.Repositories.Tests.Shared.Infrastructure;
+namespace Spirebyte.Services.Repositories.Tests.Shared.Infrastructure.Mongo;
 
 public class MongoDbTestRepository<TEntity, TKey> : IDisposable, IMongoRepository<TEntity, TKey> where TEntity : IIdentifiable<TKey>
 {

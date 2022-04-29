@@ -14,6 +14,7 @@ using Convey.MessageBrokers.RabbitMQ;
 using Convey.Metrics.AppMetrics;
 using Convey.Metrics.Prometheus;
 using Convey.Persistence.MongoDB;
+using Convey.Persistence.Redis;
 using Convey.Security;
 using Convey.Tracing.Jaeger;
 using Convey.Tracing.Jaeger.RabbitMQ;
@@ -67,6 +68,7 @@ public static class Extensions
             .AddRabbitMq(plugins: p => p.AddJaegerRabbitMqPlugin())
             .AddMessageOutbox(o => o.AddMongo())
             .AddMongo()
+            .AddRedis()
             .AddJaeger()
             .AddMongoRepository<ProjectDocument, string>("projects")
             .AddMongoRepository<RepositoryDocument, string>("repositories")
