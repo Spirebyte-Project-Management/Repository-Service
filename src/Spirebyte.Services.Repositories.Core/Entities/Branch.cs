@@ -5,6 +5,10 @@ namespace Spirebyte.Services.Repositories.Core.Entities;
 
 public class Branch
 {
+    public Branch()
+    {
+        
+    }
     public Branch(string id, string name, bool isHead, List<Commit> commits)
     {
         Id = id;

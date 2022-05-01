@@ -6,6 +6,10 @@ namespace Spirebyte.Services.Repositories.Core.Entities;
 
 public class PullRequest
 {
+    public PullRequest()
+    {
+        
+    }
     public PullRequest(long id, string name, string description, PullRequestStatus status, List<PullRequestAction> actions, string head, string branch, Guid userId, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;

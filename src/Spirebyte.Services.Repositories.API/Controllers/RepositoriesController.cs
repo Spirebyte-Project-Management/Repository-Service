@@ -48,7 +48,7 @@ public class RepositoriesController : BaseController
 
         await Semaphore.WaitAsync();
 
-        var repositories = _dispatcher.QueryAsync(query);
+        var repositories = await _dispatcher.QueryAsync(query);
     
         var cacheEntryOptions = new DistributedCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromSeconds(60))

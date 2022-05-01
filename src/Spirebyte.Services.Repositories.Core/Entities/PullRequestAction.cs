@@ -5,6 +5,10 @@ namespace Spirebyte.Services.Repositories.Core.Entities;
 
 public class PullRequestAction
 {
+    public PullRequestAction()
+    {
+        
+    }
     public PullRequestAction(DateTime createdAt, PullRequestActionType type, string message, string[] commits, Guid userId)
     {
         CreatedAt = createdAt;

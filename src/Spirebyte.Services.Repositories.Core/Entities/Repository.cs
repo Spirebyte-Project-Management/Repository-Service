@@ -9,6 +9,10 @@ namespace Spirebyte.Services.Repositories.Core.Entities;
 
 public class Repository
 {
+    public Repository()
+    {
+        
+    }
     public Repository(string id, string title, string description, string projectId, Guid referenceId,
         List<Branch> branches, List<PullRequest> pullRequests, DateTime createdAt)
     {
