@@ -24,7 +24,6 @@ public class RepositoriesController : BaseController
     private readonly IDispatcher _dispatcher;
     private readonly IRepositoryRequestStorage _repositoryRequestStorage;
     private readonly IDistributedCache _cache;
-    private static readonly SemaphoreSlim Semaphore = new(1, 1);
 
     public RepositoriesController(IDispatcher dispatcher, IRepositoryRequestStorage repositoryRequestStorage, IDistributedCache cache)
     {
@@ -45,8 +44,6 @@ public class RepositoriesController : BaseController
         {
             return Ok(repositoryDtos);
         }
-
-        await Semaphore.WaitAsync();
 
         var repositories = await _dispatcher.QueryAsync(query);
     
