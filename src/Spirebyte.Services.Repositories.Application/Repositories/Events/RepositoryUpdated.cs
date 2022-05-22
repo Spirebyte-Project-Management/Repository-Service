@@ -1,8 +1,8 @@
 ﻿using System;
 using Convey.CQRS.Events;
-using Spirebyte.Services.Activities.Core.ValueObjects;
 using Spirebyte.Services.Repositories.Core.Entities;
 using Spirebyte.Shared.Changes;
+using Spirebyte.Shared.Changes.ValueObjects;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Events;
 
