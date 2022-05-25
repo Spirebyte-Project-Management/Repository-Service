@@ -64,6 +64,8 @@ public class CreateRepositoryHandlerTests : IDisposable
 
         await _projectRepository.AddAsync(new Project(fakedRepository.ProjectId));
 
+        _projectsApiHttpClient.HasPermission(default, default, default).ReturnsForAnyArgs(true);
+        
         var command =
             new CreateRepository(fakedRepository.Title, fakedRepository.Description, fakedRepository.ProjectId);
 
