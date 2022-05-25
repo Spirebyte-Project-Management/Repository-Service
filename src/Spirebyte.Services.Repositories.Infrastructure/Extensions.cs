@@ -5,6 +5,7 @@ using Convey.CQRS.Queries;
 using Convey.Docs.Swagger;
 using Convey.HTTP;
 using Convey.LoadBalancing.Fabio;
+using Convey.Logging;
 using Convey.MessageBrokers.CQRS;
 using Convey.MessageBrokers.Outbox;
 using Convey.MessageBrokers.Outbox.Mongo;
@@ -55,7 +56,7 @@ public static class Extensions
 
         builder.Services.AddSharedContexts();
 
-        return builder
+        builder
             .AddErrorHandler<ExceptionToResponseMapper>()
             .AddQueryHandlers()
             .AddInMemoryQueryDispatcher()
@@ -76,6 +77,9 @@ public static class Extensions
             .AddMinio()
             .AddMetrics()
             .AddSecurity();
+
+        builder.Services.AddCorrelationContextFactories();
+        return builder;
     }
 
     public static IApplicationBuilder UseInfrastructure(this IApplicationBuilder app)
