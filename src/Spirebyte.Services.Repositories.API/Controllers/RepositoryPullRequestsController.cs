@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Convey.WebApi;
 using Convey.WebApi.CQRS;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Spirebyte.Services.Repositories.API.Controllers.Base;
 using Spirebyte.Services.Repositories.Application.PullRequests.Commands;
 using Spirebyte.Services.Repositories.Application.PullRequests.Services.Interfaces;
+using Spirebyte.Services.Repositories.Core.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Repositories.API.Controllers;
@@ -23,6 +25,7 @@ public class RepositoryPullRequestsController : BaseController
     }
 
     [HttpPost]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Create Pull request")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

@@ -12,6 +12,7 @@ using Spirebyte.Services.Repositories.Application.Repositories.Commands;
 using Spirebyte.Services.Repositories.Application.Repositories.DTO;
 using Spirebyte.Services.Repositories.Application.Repositories.Queries;
 using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfaces;
+using Spirebyte.Services.Repositories.Core.Constants;
 using Spirebyte.Services.Repositories.Infrastructure.DistributedCache;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -33,6 +34,7 @@ public class RepositoriesController : BaseController
     }
 
     [HttpGet]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Browse Repositories")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -56,6 +58,7 @@ public class RepositoriesController : BaseController
     }
 
     [HttpGet("{repositoryId}")]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Get Repository")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -67,6 +70,7 @@ public class RepositoriesController : BaseController
     }
 
     [HttpPost]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Create Repository")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -83,6 +87,7 @@ public class RepositoriesController : BaseController
 
 
     [HttpPut("{repositoryId}")]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Update Repository")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -99,6 +104,7 @@ public class RepositoriesController : BaseController
     }
 
     [HttpDelete("{repositoryId}")]
+    [Authorize(ApiScopes.Delete)]
     [SwaggerOperation("Delete Repository")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

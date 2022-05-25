@@ -2,11 +2,13 @@
 using System.Threading.Tasks;
 using Convey.WebApi;
 using Convey.WebApi.CQRS;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Spirebyte.Services.Repositories.API.Controllers.Base;
 using Spirebyte.Services.Repositories.Application.Repositories.DTO;
 using Spirebyte.Services.Repositories.Application.Repositories.Queries;
+using Spirebyte.Services.Repositories.Core.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Repositories.API.Controllers;
@@ -22,6 +24,7 @@ public class RepositoryBlobController : BaseController
     }
 
     [HttpGet]
+    [Authorize(ApiScopes.Read)]
     [SwaggerOperation("Get Repository Blob")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

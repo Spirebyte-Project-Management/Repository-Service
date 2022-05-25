@@ -11,7 +11,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Services.Repositories.Application;
+using Spirebyte.Services.Repositories.Core.Constants;
 using Spirebyte.Services.Repositories.Infrastructure;
+using Spirebyte.Shared.IdentityServer;
 
 namespace Spirebyte.Services.Repositories.API;
 
@@ -30,6 +32,13 @@ public class Program
             .ConfigureServices(services =>
             {
                 services.AddControllers().AddMetrics();
+                services.AddAuthorization(options =>
+                {
+                    options.AddEitherOrScopePolicy(ApiScopes.Read, "repositories.read", "repositories.manage");
+                    options.AddEitherOrScopePolicy(ApiScopes.Write, "repositories.write", "repositories.manage");
+                    options.AddEitherOrScopePolicy(ApiScopes.Delete, "repositories.delete", "repositories.manage");
+                    options.AddEitherOrScopePolicy(ApiScopes.Commit, "repositories.commit", "repositories.manage");
+                });
                 services
                     .AddConvey()
                     .AddWebApi()

@@ -2,11 +2,13 @@
 using System.Threading.Tasks;
 using Convey.WebApi;
 using Convey.WebApi.CQRS;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Spirebyte.Services.Repositories.API.Controllers.Base;
 using Spirebyte.Services.Repositories.Application.Branches.Commands;
 using Spirebyte.Services.Repositories.Application.Branches.Services.Interfaces;
+using Spirebyte.Services.Repositories.Core.Constants;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Spirebyte.Services.Repositories.API.Controllers;
@@ -24,6 +26,7 @@ public class RepositoryBranchController : BaseController
     }
 
     [HttpPost]
+    [Authorize(ApiScopes.Write)]
     [SwaggerOperation("Create Branch")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -41,6 +44,7 @@ public class RepositoryBranchController : BaseController
     }
     
     [HttpDelete("{*branchId}")]
+    [Authorize(ApiScopes.Delete)]
     [SwaggerOperation("Delete Branch")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

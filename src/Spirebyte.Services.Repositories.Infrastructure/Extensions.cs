@@ -38,6 +38,7 @@ using Spirebyte.Services.Repositories.Infrastructure.Mongo.Repositories;
 using Spirebyte.Services.Repositories.Infrastructure.ServiceDiscovery;
 using Spirebyte.Services.Repositories.Infrastructure.Services;
 using Spirebyte.Shared.Contexts;
+using Spirebyte.Shared.IdentityServer;
 
 namespace Spirebyte.Services.Repositories.Infrastructure;
 
@@ -60,7 +61,7 @@ public static class Extensions
             .AddQueryHandlers()
             .AddInMemoryQueryDispatcher()
             .AddInMemoryDispatcher()
-            .AddJwt()
+            .AddIdentityServerAuthentication()
             .AddHttpClient()
             .AddCustomConsul()
             .AddFabio()
@@ -84,7 +85,6 @@ public static class Extensions
             .UseSwaggerDocs()
             .UseJaeger()
             .UseConvey()
-            .UseAccessTokenValidator()
             .UsePublicContracts<ContractAttribute>()
             .UseAuthentication()
             .UseMetrics()
