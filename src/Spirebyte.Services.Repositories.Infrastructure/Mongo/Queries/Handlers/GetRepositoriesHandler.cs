@@ -36,7 +36,8 @@ internal sealed class GetRepositoriesHandler : IQueryHandler<GetRepositories, IE
         if (!await _projectRepository.ExistsAsync(p => p.Id == query.ProjectId))
             throw new ProjectNotFoundException(query.ProjectId);
 
-        var repositoriesWithProject = await documents.Where(p => p.ProjectId == query.ProjectId).ToListAsync(cancellationToken);
+        var repositoriesWithProject =
+            await documents.Where(p => p.ProjectId == query.ProjectId).ToListAsync(cancellationToken);
 
         return repositoriesWithProject.Select(p => p.AsDto());
     }

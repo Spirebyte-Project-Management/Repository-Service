@@ -5,5 +5,5 @@ public enum PullRequestActionType
     Commit,
     Comment,
     Merged,
-    Declined,
+    Declined
 }

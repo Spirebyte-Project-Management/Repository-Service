@@ -11,8 +11,8 @@ public class Repository
 {
     public Repository()
     {
-        
     }
+
     public Repository(string id, string title, string description, string projectId, Guid referenceId,
         List<Branch> branches, List<PullRequest> pullRequests, DateTime createdAt)
     {
@@ -50,7 +50,7 @@ public class Repository
         Branches = repoInstance.Branches.Select(b => new Branch(b)).ToList();
         return Task.CompletedTask;
     }
-    
+
     public Guid ChangeReferenceId()
     {
         ReferenceId = Guid.NewGuid();

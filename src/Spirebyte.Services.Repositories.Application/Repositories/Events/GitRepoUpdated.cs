@@ -9,5 +9,6 @@ public class GitRepoUpdated : IEvent
     {
         Repository = repository;
     }
+
     public Repository Repository { get; set; }
 }

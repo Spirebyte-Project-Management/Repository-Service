@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System;
 using Convey.Types;
-using Spirebyte.Services.Repositories.Tests.Shared.Infrastructure;
 using Spirebyte.Services.Repositories.Tests.Shared.Infrastructure.Mongo;
 
 namespace Spirebyte.Services.Repositories.Tests.Shared.Fixtures;

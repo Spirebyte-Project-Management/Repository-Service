@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Spirebyte.Services.Repositories.Core.Entities;
+﻿namespace Spirebyte.Services.Repositories.Core.Entities;
 
 public class Project
 {

@@ -21,15 +21,15 @@ namespace Spirebyte.Services.Repositories.Tests.Unit.Application.Repository.Comm
 
 public class CreateRepositoryHandlerTests
 {
+    private readonly IAppContext _appContext;
     private readonly ICommandHandler<CreateRepository> _handler;
     private readonly IMessageBroker _messageBroker;
     private readonly IMinioService _minioService;
 
     private readonly IProjectRepository _projectRepository;
+    private readonly IProjectsApiHttpClient _projectsApiHttpClient;
     private readonly IRepositoryRepository _repositoryRepository;
     private readonly IRepositoryRequestStorage _repositoryRequestStorage;
-    private readonly IProjectsApiHttpClient _projectsApiHttpClient;
-    private readonly IAppContext _appContext;
 
     public CreateRepositoryHandlerTests()
     {

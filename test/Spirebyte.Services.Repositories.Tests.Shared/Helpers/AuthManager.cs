@@ -11,20 +11,19 @@ namespace Spirebyte.Services.Repositories.Tests.Shared.Helpers;
 
 public class AuthManager
 {
+    private readonly string _issuer;
     private readonly JwtOptions _options;
     private readonly SigningCredentials _signingCredentials;
-    private readonly string _issuer;
 
     public AuthManager(JwtOptions options)
     {
         var issuerSigningKey = options.IssuerSigningKey;
-        if (issuerSigningKey is null)
-        {
-            throw new InvalidOperationException("Issuer signing key not set.");
-        }
+        if (issuerSigningKey is null) throw new InvalidOperationException("Issuer signing key not set.");
 
         _options = options;
-        _signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.IssuerSigningKey)),  SecurityAlgorithms.HmacSha256);
+        _signingCredentials =
+            new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.IssuerSigningKey)),
+                SecurityAlgorithms.HmacSha256);
         _issuer = options.Issuer;
     }
 
@@ -39,23 +38,15 @@ public class AuthManager
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Iat, new DateTimeOffset(now).ToUnixTimeMilliseconds().ToString())
         };
-        if (!string.IsNullOrWhiteSpace(role))
-        {
-            jwtClaims.Add(new Claim(ClaimTypes.Role, role));
-        }
+        if (!string.IsNullOrWhiteSpace(role)) jwtClaims.Add(new Claim(ClaimTypes.Role, role));
 
-        if (!string.IsNullOrWhiteSpace(audience))
-        {
-            jwtClaims.Add(new Claim(JwtRegisteredClaimNames.Aud, audience));
-        }
+        if (!string.IsNullOrWhiteSpace(audience)) jwtClaims.Add(new Claim(JwtRegisteredClaimNames.Aud, audience));
 
         if (claims?.Any() is true)
         {
             var customClaims = new List<Claim>();
             foreach (var (claim, values) in claims)
-            {
                 customClaims.AddRange(values.Select(value => new Claim(claim, value)));
-            }
 
             jwtClaims.AddRange(customClaims);
         }
@@ -76,7 +67,7 @@ public class AuthManager
         {
             AccessToken = token,
             Expires = new DateTimeOffset(expires).ToUnixTimeMilliseconds(),
-            Role = role ?? string.Empty,
+            Role = role ?? string.Empty
         };
     }
 }

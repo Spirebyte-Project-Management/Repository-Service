@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Convey.CQRS.Commands;
@@ -17,14 +16,15 @@ namespace Spirebyte.Services.Repositories.Application.PullRequests.Commands.Hand
 
 public class CreatePullRequestCommentHandler : ICommandHandler<CreatePullRequestComment>
 {
-    private readonly IMessageBroker _messageBroker;
-    private readonly IRepositoryRepository _repositoryRepository;
     private readonly IAppContext _appContext;
-    private readonly IPullRequestRepository _pullRequestRepository;
+    private readonly IMessageBroker _messageBroker;
     private readonly IPullRequestActionRequestStorage _pullRequestActionRequestStorage;
+    private readonly IPullRequestRepository _pullRequestRepository;
+    private readonly IRepositoryRepository _repositoryRepository;
 
     public CreatePullRequestCommentHandler(IRepositoryRepository repositoryRepository, IAppContext appContext,
-        IMessageBroker messageBroker, IPullRequestRepository pullRequestRepository, IPullRequestActionRequestStorage pullRequestActionRequestStorage)
+        IMessageBroker messageBroker, IPullRequestRepository pullRequestRepository,
+        IPullRequestActionRequestStorage pullRequestActionRequestStorage)
     {
         _repositoryRepository = repositoryRepository;
         _appContext = appContext;
@@ -43,13 +43,14 @@ public class CreatePullRequestCommentHandler : ICommandHandler<CreatePullRequest
 
         var pullRequestAction = new PullRequestAction(DateTime.Now, PullRequestActionType.Comment, command.Message,
             Array.Empty<string>(), _appContext.Identity.Id);
-        
+
         pullRequest.AddAction(pullRequestAction);
 
         await _pullRequestRepository.UpdateAsync(repository.Id, pullRequest);
 
         _pullRequestActionRequestStorage.SetPullRequestAction(command.ReferenceId, pullRequestAction);
 
-        await _messageBroker.PublishAsync(new PullRequestCommentCreated(pullRequestAction, repository.Id, pullRequest.Id));
+        await _messageBroker.PublishAsync(new PullRequestCommentCreated(pullRequestAction, repository.Id,
+            pullRequest.Id));
     }
 }

@@ -6,10 +6,11 @@ namespace Spirebyte.Services.Repositories.Tests.Shared.Fixtures;
 
 public class PerformanceFixture
 {
-    public PerformanceOptions PerformanceOptions { get; set; }
-
     public PerformanceFixture()
     {
-        PerformanceOptions = OptionsHelper.GetOptions<PerformanceOptions>("performance",AppsettingsConst.PerformanceTest);
+        PerformanceOptions =
+            OptionsHelper.GetOptions<PerformanceOptions>("performance", AppsettingsConst.PerformanceTest);
     }
+
+    public PerformanceOptions PerformanceOptions { get; set; }
 }

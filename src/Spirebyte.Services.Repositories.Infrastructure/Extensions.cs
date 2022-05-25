@@ -1,9 +1,7 @@
 ﻿using Convey;
-using Convey.Auth;
 using Convey.CQRS.Commands;
 using Convey.CQRS.Events;
 using Convey.CQRS.Queries;
-using Convey.Discovery.Consul;
 using Convey.Docs.Swagger;
 using Convey.HTTP;
 using Convey.LoadBalancing.Fabio;
@@ -12,7 +10,6 @@ using Convey.MessageBrokers.Outbox;
 using Convey.MessageBrokers.Outbox.Mongo;
 using Convey.MessageBrokers.RabbitMQ;
 using Convey.Metrics.AppMetrics;
-using Convey.Metrics.Prometheus;
 using Convey.Persistence.MongoDB;
 using Convey.Persistence.Redis;
 using Convey.Security;
@@ -52,7 +49,7 @@ public static class Extensions
         builder.Services.AddSingleton<IProjectRepository, ProjectRepository>();
         builder.Services.AddTransient<IIdentityApiHttpClient, IdentityApiHttpClient>();
         builder.Services.AddTransient<IProjectsApiHttpClient, ProjectsApiHttpClient>();
-        
+
         builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(OutboxCommandHandlerDecorator<>));
         builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(OutboxEventHandlerDecorator<>));
 

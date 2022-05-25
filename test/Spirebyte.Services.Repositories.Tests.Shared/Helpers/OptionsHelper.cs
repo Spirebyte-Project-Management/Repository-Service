@@ -12,7 +12,6 @@ public class OptionsHelper
         var configuration = new TSettings();
 
         GetConfigurationRoot(settingsFileName)
-            
             .GetSection(section)
             .Bind(configuration);
 

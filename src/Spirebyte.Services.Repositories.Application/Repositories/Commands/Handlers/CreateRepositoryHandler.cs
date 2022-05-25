@@ -23,11 +23,11 @@ namespace Spirebyte.Services.Repositories.Application.Repositories.Commands.Hand
 // Simple wrapper
 internal sealed class CreateRepositoryHandler : ICommandHandler<CreateRepository>
 {
+    private readonly IAppContext _appContext;
     private readonly IMessageBroker _messageBroker;
     private readonly IMinioService _minioService;
-    private readonly IProjectsApiHttpClient _projectsApiHttpClient;
-    private readonly IAppContext _appContext;
     private readonly IProjectRepository _projectRepository;
+    private readonly IProjectsApiHttpClient _projectsApiHttpClient;
     private readonly IRepositoryRepository _repositoryRepository;
     private readonly IRepositoryRequestStorage _repositoryRequestStorage;
 
@@ -49,9 +49,10 @@ internal sealed class CreateRepositoryHandler : ICommandHandler<CreateRepository
         if (!await _projectRepository.ExistsAsync(command.ProjectId))
             throw new ProjectNotFoundException(command.ProjectId);
 
-        if (!await _projectsApiHttpClient.HasPermission(RepositoryPermissionKeys.CreateRepositories, _appContext.Identity.Id,
+        if (!await _projectsApiHttpClient.HasPermission(RepositoryPermissionKeys.CreateRepositories,
+                _appContext.Identity.Id,
                 command.ProjectId)) throw new ActionNotAllowedException();
-        
+
         var repositoryCount = await _repositoryRepository.GetRepositoryCountOfProjectAsync(command.ProjectId);
         var repositoryId = $"{command.ProjectId}-repository-{repositoryCount + 1}";
 

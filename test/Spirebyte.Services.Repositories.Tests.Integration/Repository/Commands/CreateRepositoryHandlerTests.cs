@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Bogus;
 using Convey.CQRS.Commands;
 using FluentAssertions;
 using NSubstitute;
@@ -26,35 +25,42 @@ namespace Spirebyte.Services.Repositories.Tests.Integration.Repository.Commands;
 [Collection("Spirebyte collection")]
 public class CreateRepositoryHandlerTests : IDisposable
 {
+    private readonly IAppContext _appContext;
     private readonly ICommandHandler<CreateRepository> _handler;
     private readonly TestMessageBroker _messageBroker;
     private readonly IMinioService _minioService;
 
     private readonly IProjectRepository _projectRepository;
-    private readonly IRepositoryRepository _repositoryRepository;
+    private readonly IProjectsApiHttpClient _projectsApiHttpClient;
     private readonly MongoDbFixture<ProjectDocument, string> _projectsFixture;
     private readonly MongoDbFixture<RepositoryDocument, string> _repositoryFixture;
-    private readonly IProjectsApiHttpClient _projectsApiHttpClient;
-    private readonly IAppContext _appContext;
+    private readonly IRepositoryRepository _repositoryRepository;
 
     private readonly IRepositoryRequestStorage _repositoryRequestStorage;
 
-    public CreateRepositoryHandlerTests(MongoDbFixture<ProjectDocument, string> projectsFixture, MongoDbFixture<RepositoryDocument, string> repositoryFixture)
+    public CreateRepositoryHandlerTests(MongoDbFixture<ProjectDocument, string> projectsFixture,
+        MongoDbFixture<RepositoryDocument, string> repositoryFixture)
     {
         _projectsFixture = projectsFixture;
         _repositoryFixture = repositoryFixture;
-        
+
         _projectRepository = new ProjectRepository(_projectsFixture);
         _repositoryRepository = new RepositoryRepository(_repositoryFixture);
         _messageBroker = new TestMessageBroker();
-        
+
         _repositoryRequestStorage = Substitute.For<IRepositoryRequestStorage>();
         _projectsApiHttpClient = Substitute.For<IProjectsApiHttpClient>();
         _appContext = Substitute.For<IAppContext>();
         _minioService = Substitute.For<IMinioService>();
-        
+
         _handler = new CreateRepositoryHandler(_projectRepository, _repositoryRepository, _messageBroker,
             _repositoryRequestStorage, _minioService, _projectsApiHttpClient, _appContext);
+    }
+
+    public void Dispose()
+    {
+        _projectsFixture.Dispose();
+        _repositoryFixture.Dispose();
     }
 
     [Fact]
@@ -65,14 +71,14 @@ public class CreateRepositoryHandlerTests : IDisposable
         await _projectRepository.AddAsync(new Project(fakedRepository.ProjectId));
 
         _projectsApiHttpClient.HasPermission(default, default, default).ReturnsForAnyArgs(true);
-        
+
         var command =
             new CreateRepository(fakedRepository.Title, fakedRepository.Description, fakedRepository.ProjectId);
 
         var currentRepositories = await _repositoryFixture.FindAsync(r => r.ProjectId == fakedRepository.ProjectId);
         _repositoryRequestStorage.SetRepository(
             Arg.Do<Guid>(r => { r.Should().Be(command.ReferenceId); }),
-            Arg.Do<Repositories.Core.Entities.Repository>(r =>
+            Arg.Do<Core.Entities.Repository>(r =>
             {
                 r.Should().NotBeNull();
                 r.Id.Should().Be($"{fakedRepository.ProjectId}-repository-{currentRepositories.Count + 1}");
@@ -87,7 +93,7 @@ public class CreateRepositoryHandlerTests : IDisposable
         await _handler
             .Awaiting(c => c.HandleAsync(command))
             .Should().NotThrowAsync();
-        
+
         _messageBroker.Events.Should().NotBeEmpty();
         _messageBroker.Events.Count.Should().Be(1);
         var @event = _messageBroker.Events[0];
@@ -104,15 +110,9 @@ public class CreateRepositoryHandlerTests : IDisposable
 
         var command =
             new CreateRepository(fakedRepository.Title, fakedRepository.Description, fakedRepository.ProjectId);
-        
+
         await _handler
             .Awaiting(c => c.HandleAsync(command))
             .Should().ThrowAsync<ProjectNotFoundException>();
-    }
-
-    public void Dispose()
-    {
-        _projectsFixture.Dispose();
-        _repositoryFixture.Dispose();
     }
 }

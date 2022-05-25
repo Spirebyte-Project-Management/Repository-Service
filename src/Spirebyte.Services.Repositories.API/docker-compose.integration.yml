@@ -1,6 +1,6 @@
 ﻿version: "3.7"
 
-services:  
+services:
   spirebyte-repository-integration-mongo:
     image: mongo
     container_name: spirebyte-repository-integration-mongo

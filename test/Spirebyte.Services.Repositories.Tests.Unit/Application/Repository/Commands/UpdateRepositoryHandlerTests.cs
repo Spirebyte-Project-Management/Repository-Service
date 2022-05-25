@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Bogus;
 using Convey.CQRS.Commands;
 using FluentAssertions;
 using NSubstitute;
-using Partytitan.Convey.Minio.Services.Interfaces;
-using Spirebyte.Services.Repositories.Application.Projects.Exceptions;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands.Handlers;
 using Spirebyte.Services.Repositories.Application.Repositories.Events;
 using Spirebyte.Services.Repositories.Application.Repositories.Exceptions;
-using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfaces;
 using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Repositories;
 using Spirebyte.Services.Repositories.Tests.Shared.MockData.Entities;
@@ -36,10 +32,11 @@ public class UpdateRepositoryHandlerTests
     {
         var fakedRepository = RepositoryFaker.Instance.Generate();
 
-        var command = new UpdateRepository(fakedRepository.Id, fakedRepository.Title, fakedRepository.Description, fakedRepository.ProjectId);
-        
+        var command = new UpdateRepository(fakedRepository.Id, fakedRepository.Title, fakedRepository.Description,
+            fakedRepository.ProjectId);
+
         _repositoryRepository.GetAsync(fakedRepository.Id).Returns(fakedRepository);
-        
+
         await _messageBroker
             .PublishAsync(Arg.Do<RepositoryUpdated>(r =>
             {
@@ -54,8 +51,8 @@ public class UpdateRepositoryHandlerTests
         await _handler
             .Awaiting(c => c.HandleAsync(command))
             .Should().NotThrowAsync();
-        
-        
+
+
         await _repositoryRepository.Received().UpdateAsync(Arg.Do<Repositories.Core.Entities.Repository>(r =>
         {
             r.Should().NotBeNull();
@@ -72,8 +69,9 @@ public class UpdateRepositoryHandlerTests
     {
         var fakedRepository = RepositoryFaker.Instance.Generate();
 
-        var command = new UpdateRepository(fakedRepository.Id, fakedRepository.Title, fakedRepository.Description, fakedRepository.ProjectId);
-        
+        var command = new UpdateRepository(fakedRepository.Id, fakedRepository.Title, fakedRepository.Description,
+            fakedRepository.ProjectId);
+
         await _handler
             .Awaiting(c => c.HandleAsync(command))
             .Should().ThrowAsync<RepositoryNotFoundException>();

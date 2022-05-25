@@ -1,12 +1,9 @@
-﻿using System.Buffers;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Convey.Persistence.MongoDB;
-using MongoDB.Driver;
 using Spirebyte.Services.Repositories.Core.Entities;
 using Spirebyte.Services.Repositories.Core.Repositories;
 using Spirebyte.Services.Repositories.Infrastructure.Mongo.Documents;
-using Spirebyte.Services.Repositories.Infrastructure.Mongo.Documents.Mappers;
 
 namespace Spirebyte.Services.Repositories.Infrastructure.Mongo.Repositories;
 
@@ -23,7 +20,7 @@ public class PullRequestRepository : IPullRequestRepository
     {
         var repository = await _repository.GetAsync(x => x.Id == repositoryId);
         var pullRequest = repository.PullRequests.Find(x => x.Id == pullRequestId);
-        
+
         return pullRequest;
     }
 
@@ -52,10 +49,7 @@ public class PullRequestRepository : IPullRequestRepository
     {
         var repository = await _repository.GetAsync(x => x.Id == repositoryId);
         var index = repository.PullRequests.FindIndex(x => x.Id == pullRequest.Id);
-        if (index > -1)
-        {
-            repository.PullRequests[index] = pullRequest;   
-        }
+        if (index > -1) repository.PullRequests[index] = pullRequest;
 
         await _repository.UpdateAsync(repository);
     }

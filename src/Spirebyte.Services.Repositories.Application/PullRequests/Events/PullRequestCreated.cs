@@ -8,7 +8,8 @@ namespace Spirebyte.Services.Repositories.Application.PullRequests.Events;
 
 public class PullRequestCreated : IEvent
 {
-    public PullRequestCreated(long id, string name, string description, PullRequestStatus status, List<PullRequestAction> actions, string head, string branch, DateTime createdAt, string repositoryId)
+    public PullRequestCreated(long id, string name, string description, PullRequestStatus status,
+        List<PullRequestAction> actions, string head, string branch, DateTime createdAt, string repositoryId)
     {
         Id = id;
         RepositoryId = repositoryId;
@@ -33,6 +34,7 @@ public class PullRequestCreated : IEvent
         Branch = pullRequest.Branch;
         CreatedAt = pullRequest.CreatedAt;
     }
+
     public long Id { get; set; }
     public string RepositoryId { get; set; }
     public string Name { get; set; }

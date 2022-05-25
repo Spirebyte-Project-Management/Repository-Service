@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using System.Net;
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Services;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +10,7 @@ public class DockerHelper
 {
     private static ICompositeService _compositeService;
 
-    
+
     public static void DockerComposeUp(string settingsFile)
     {
         var config = LoadConfiguration(settingsFile);
@@ -35,7 +34,7 @@ public class DockerHelper
         _compositeService.Stop();
         _compositeService.Dispose();
     }
-    
+
     private static IConfiguration LoadConfiguration(string settingFile)
     {
         return new ConfigurationBuilder()

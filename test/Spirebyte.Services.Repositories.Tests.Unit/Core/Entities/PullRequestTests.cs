@@ -13,7 +13,7 @@ public class PullRequestTests
         var fakedPullRequest = PullRequestFaker.Instance.Generate();
 
         var pullRequest = new PullRequest(fakedPullRequest.Id, fakedPullRequest.Name, fakedPullRequest.Description,
-            fakedPullRequest.Status, fakedPullRequest.Actions, fakedPullRequest.Head, fakedPullRequest.Branch, 
+            fakedPullRequest.Status, fakedPullRequest.Actions, fakedPullRequest.Head, fakedPullRequest.Branch,
             fakedPullRequest.UserId, fakedPullRequest.CreatedAt, fakedPullRequest.UpdatedAt);
 
         pullRequest.Should().NotBeNull();
@@ -28,7 +28,7 @@ public class PullRequestTests
         pullRequest.CreatedAt.Should().Be(fakedPullRequest.CreatedAt);
         pullRequest.UpdatedAt.Should().Be(fakedPullRequest.UpdatedAt);
     }
-    
+
     [Fact]
     public void pull_request_add_action_should_add_action()
     {

@@ -9,10 +9,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Convey" Version="1.0.531" />
-        <PackageReference Include="Convey.Logging" Version="1.0.531" />
-        <PackageReference Include="Convey.WebApi" Version="1.0.531" />
-        <PackageReference Include="Convey.WebApi.CQRS" Version="1.0.531" />
+        <PackageReference Include="Convey" Version="1.0.531"/>
+        <PackageReference Include="Convey.Logging" Version="1.0.531"/>
+        <PackageReference Include="Convey.WebApi" Version="1.0.531"/>
+        <PackageReference Include="Convey.WebApi.CQRS" Version="1.0.531"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -20,30 +20,30 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Spirebyte.Services.Repositories.Infrastructure\Spirebyte.Services.Repositories.Infrastructure.csproj" />
+        <ProjectReference Include="..\Spirebyte.Services.Repositories.Infrastructure\Spirebyte.Services.Repositories.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="RepoCache" />
+        <Folder Include="RepoCache"/>
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="docker-compose.integration.yml" />
-      <Content Include="docker-compose.integration.yml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Remove="docker-compose.acceptance.yml" />
-      <Content Include="docker-compose.acceptance.yml">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Remove="Dockerfile" />
-      <Content Include="Dockerfile">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+        <None Remove="docker-compose.integration.yml"/>
+        <Content Include="docker-compose.integration.yml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <None Remove="docker-compose.acceptance.yml"/>
+        <Content Include="docker-compose.acceptance.yml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+        <None Remove="Dockerfile"/>
+        <Content Include="Dockerfile">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Convey.WebApi.CQRS;
 using Microsoft.AspNetCore.Authorization;
@@ -22,11 +21,12 @@ namespace Spirebyte.Services.Repositories.API.Controllers;
 public class RepositoriesController : BaseController
 {
     private const string RepositoriesCacheKey = "repositories:";
+    private readonly IDistributedCache _cache;
     private readonly IDispatcher _dispatcher;
     private readonly IRepositoryRequestStorage _repositoryRequestStorage;
-    private readonly IDistributedCache _cache;
 
-    public RepositoriesController(IDispatcher dispatcher, IRepositoryRequestStorage repositoryRequestStorage, IDistributedCache cache)
+    public RepositoriesController(IDispatcher dispatcher, IRepositoryRequestStorage repositoryRequestStorage,
+        IDistributedCache cache)
     {
         _dispatcher = dispatcher;
         _repositoryRequestStorage = repositoryRequestStorage;
@@ -42,18 +42,15 @@ public class RepositoriesController : BaseController
     public async Task<ActionResult<IEnumerable<RepositoryDto>>> BrowseAsync([FromQuery] GetRepositories query)
     {
         var cacheKey = RepositoriesCacheKey + query.ProjectId;
-        if (_cache.TryGetValue(cacheKey, out List<RepositoryDto> repositoryDtos))
-        {
-            return Ok(repositoryDtos);
-        }
+        if (_cache.TryGetValue(cacheKey, out List<RepositoryDto> repositoryDtos)) return Ok(repositoryDtos);
 
         var repositories = await _dispatcher.QueryAsync(query);
-    
+
         var cacheEntryOptions = new DistributedCacheEntryOptions()
             .SetSlidingExpiration(TimeSpan.FromSeconds(60))
             .SetAbsoluteExpiration(TimeSpan.FromSeconds(3600));
         await _cache.SetAsync(cacheKey, repositories, cacheEntryOptions);
-            
+
         return Ok(repositories);
     }
 
@@ -77,10 +74,10 @@ public class RepositoriesController : BaseController
     public async Task<ActionResult> CreateRepository(CreateRepository command)
     {
         await _dispatcher.SendAsync(command);
-        
+
         var cacheKey = RepositoriesCacheKey + command.ProjectId;
         await _cache.RemoveAsync(cacheKey);
-        
+
         var repository = _repositoryRequestStorage.GetRepository(command.ReferenceId);
         return Created($"Repositories/{repository.Id}", repository);
     }
@@ -96,10 +93,10 @@ public class RepositoriesController : BaseController
         if (!command.Id.Equals(repositoryId)) return NotFound();
 
         await _dispatcher.SendAsync(command);
-        
+
         var cacheKey = RepositoriesCacheKey + command.ProjectId;
         await _cache.RemoveAsync(cacheKey);
-        
+
         return Ok();
     }
 

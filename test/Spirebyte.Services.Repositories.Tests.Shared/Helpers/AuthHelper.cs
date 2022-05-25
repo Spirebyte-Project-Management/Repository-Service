@@ -17,5 +17,7 @@ public static class AuthHelper
 
     public static string GenerateJwt(Guid userId, string role = null, string audience = null,
         IDictionary<string, IEnumerable<string>> claims = null)
-        => AuthManager.CreateToken(userId, role, audience, claims).AccessToken;
+    {
+        return AuthManager.CreateToken(userId, role, audience, claims).AccessToken;
+    }
 }

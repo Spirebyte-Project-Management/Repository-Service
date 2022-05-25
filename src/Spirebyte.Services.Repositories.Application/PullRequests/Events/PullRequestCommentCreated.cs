@@ -5,9 +5,10 @@ using Spirebyte.Services.Repositories.Core.Enums;
 
 namespace Spirebyte.Services.Repositories.Application.PullRequests.Events;
 
-public class PullRequestCommentCreated  : IEvent
+public class PullRequestCommentCreated : IEvent
 {
-    public PullRequestCommentCreated(DateTime createdAt, PullRequestActionType type, string message, string[] commits, Guid userId, string repositoryId, int pullRequestId)
+    public PullRequestCommentCreated(DateTime createdAt, PullRequestActionType type, string message, string[] commits,
+        Guid userId, string repositoryId, int pullRequestId)
     {
         RepositoryId = repositoryId;
         PullRequestId = pullRequestId;
@@ -34,7 +35,7 @@ public class PullRequestCommentCreated  : IEvent
     public string Message { get; set; }
     public string[] Commits { get; set; }
     public Guid UserId { get; set; }
-    
+
     public string RepositoryId { get; set; }
     public long PullRequestId { get; set; }
 }

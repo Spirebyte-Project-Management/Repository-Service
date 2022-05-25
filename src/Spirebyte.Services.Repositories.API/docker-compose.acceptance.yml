@@ -6,7 +6,7 @@ services:
     container_name: spirebyte-repository-acceptance
     ports:
       - "5909:80"
-    depends_on: 
+    depends_on:
       spirebyte-repository-acceptance-mongo:
         condition: service_started
       spirebyte-repository-acceptance-rabbitmq:

@@ -31,11 +31,8 @@ public class RepositoryBlobController : BaseController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<BlobDto>> GetAsync(string repositoryId, [FromQuery] GetBlob query)
     {
-        if (string.IsNullOrEmpty(query.Path))
-        {
-            return BadRequest();
-        }
-        
+        if (string.IsNullOrEmpty(query.Path)) return BadRequest();
+
         query.Path = Uri.UnescapeDataString(query.Path ?? string.Empty);
         return Ok(await _dispatcher.QueryAsync(query.Bind(q => q.RepositoryId, repositoryId)));
     }

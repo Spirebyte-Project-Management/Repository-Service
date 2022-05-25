@@ -10,10 +10,10 @@ public class TestMessageBroker : IMessageBroker
     private readonly List<IEvent> _events = new();
 
     public IReadOnlyList<IEvent> Events => _events;
-        
+
     public Task PublishAsync(params IEvent[] events)
     {
-        _events.AddRange(@events);
+        _events.AddRange(events);
         return Task.CompletedTask;
     }
 }

@@ -48,7 +48,7 @@ public class GetBlobHandler : IQueryHandler<GetBlob, BlobDto>
         if (treeTarget.TargetType != TreeEntryTargetType.Blob) return null;
 
         var blob = treeTarget.Target as Blob;
-        
+
         var parentCommit = repo.Commits.QueryBy(new CommitFilter
         {
             IncludeReachableFrom = searchCommit,

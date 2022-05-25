@@ -21,7 +21,7 @@ public class BlobDto
 
         ParentCommit = new Core.Entities.Commit(commit);
     }
-    
+
     public string Id { get; set; }
     public string Sha { get; set; }
     public string Path { get; set; }

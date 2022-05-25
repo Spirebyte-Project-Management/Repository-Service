@@ -12,16 +12,15 @@ using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Helpers;
 using Spirebyte.Services.Repositories.Core.Repositories;
 using Branch = Spirebyte.Services.Repositories.Core.Entities.Branch;
-using Repository = LibGit2Sharp.Repository;
 
 namespace Spirebyte.Services.Repositories.Application.Branches.Commands.Handlers;
 
 internal sealed class DeleteBranchHandler : ICommandHandler<DeleteBranch>
 {
-    private readonly IMessageBroker _messageBroker;
     private readonly IEventDispatcher _eventDispatcher;
-    private readonly IRepositoryService _repositoryService;
+    private readonly IMessageBroker _messageBroker;
     private readonly IRepositoryRepository _repositoryRepository;
+    private readonly IRepositoryService _repositoryService;
 
     public DeleteBranchHandler(IRepositoryService repositoryService, IRepositoryRepository repositoryRepository,
         IMessageBroker messageBroker, IEventDispatcher eventDispatcher)
@@ -37,14 +36,14 @@ internal sealed class DeleteBranchHandler : ICommandHandler<DeleteBranch>
         // get repo
         var repository = await _repositoryRepository.GetAsync(command.RepositoryId);
         if (repository is null) throw new RepositoryNotFoundException(command.RepositoryId);
-        
+
         // check branch name
         // get actual repo
         await _repositoryService.EnsureLatestRepositoryIsCached(repository);
-        
+
         var repoPath = RepoPathHelpers.GetCachePathForRepository(repository);
         var repo = new Repository(repoPath);
-        
+
         // check if branch exists
         var branch = repo.Branches.FirstOrDefault(b => b.CanonicalName == command.BranchId);
         if (branch is null) throw new BranchNotFoundException(command.BranchId);
@@ -56,9 +55,9 @@ internal sealed class DeleteBranchHandler : ICommandHandler<DeleteBranch>
         await _repositoryRepository.UpdateAsync(repository);
 
         await _eventDispatcher.PublishAsync(new GitRepoUpdated(repository), cancellationToken);
-        
+
         await _messageBroker.PublishAsync(new BranchDeleted(new Branch(branch)));
-        
+
         await _eventDispatcher.PublishAsync(new GitRepoUpdated(repository), cancellationToken);
     }
 }

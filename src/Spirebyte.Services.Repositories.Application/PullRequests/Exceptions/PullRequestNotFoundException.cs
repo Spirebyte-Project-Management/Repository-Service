@@ -4,7 +4,8 @@ namespace Spirebyte.Services.Repositories.Application.PullRequests.Exceptions;
 
 public class PullRequestNotFoundException : AppException
 {
-    public PullRequestNotFoundException(string repositoryId, int pullRequestId) : base($"Pullrequest with id: '{pullRequestId}' was not found. In repository with id: {repositoryId}")
+    public PullRequestNotFoundException(string repositoryId, int pullRequestId) : base(
+        $"Pullrequest with id: '{pullRequestId}' was not found. In repository with id: {repositoryId}")
     {
         RepositoryId = repositoryId;
         PullRequestId = pullRequestId;

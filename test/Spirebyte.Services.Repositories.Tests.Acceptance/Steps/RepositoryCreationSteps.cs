@@ -11,28 +11,26 @@ namespace Spirebyte.Services.Repositories.Tests.Acceptance.Steps;
 [Binding]
 public class RepositoryCreationSteps
 {
-    private readonly RepositoryApi _repositoryApi;
-    private readonly MongoDbDriver _mongoDbDriver;
+    private static readonly Guid UserId = Guid.NewGuid();
     private readonly JsonDriver _jsonDriver;
+    private readonly MongoDbDriver _mongoDbDriver;
+    private readonly RepositoryApi _repositoryApi;
     private readonly ScenarioContext _scenarioContext;
 
-    private static readonly Guid UserId = Guid.NewGuid();
-    
-    public RepositoryCreationSteps(RepositoryApi repositoryApi, MongoDbDriver mongoDbDriver, JsonDriver jsonDriver, ScenarioContext scenarioContext)
+    public RepositoryCreationSteps(RepositoryApi repositoryApi, MongoDbDriver mongoDbDriver, JsonDriver jsonDriver,
+        ScenarioContext scenarioContext)
     {
         _repositoryApi = repositoryApi;
         _mongoDbDriver = mongoDbDriver;
         _jsonDriver = jsonDriver;
         _scenarioContext = scenarioContext;
     }
-    
+
     [Given(@"the project ([a-zA-Z]+) exists")]
     public async Task GivenTheProjectExists(string projectId)
     {
         if (!await _mongoDbDriver.ProjectRepository.ExistsAsync(p => p.Id == projectId))
-        {
-            await _mongoDbDriver.ProjectRepository.AddAsync(new ProjectDocument() { Id = projectId });
-        }
+            await _mongoDbDriver.ProjectRepository.AddAsync(new ProjectDocument { Id = projectId });
     }
 
     [When(@"I try to create a repository with the following details")]
@@ -45,6 +43,7 @@ public class RepositoryCreationSteps
             var response = await _repositoryApi.CreateAsync(repositoryCommand, UserId);
             createdRepositories.Add(response);
         }
+
         _scenarioContext.Add("CreatedRepositories", createdRepositories);
     }
 
@@ -53,18 +52,14 @@ public class RepositoryCreationSteps
     {
         var createdRepositoryResponses = _scenarioContext.Get<List<RestResponse>>("CreatedRepositories");
         foreach (var createdRepositoryResponse in createdRepositoryResponses)
-        {
             createdRepositoryResponse.IsSuccessful.Should().BeTrue();
-        }
     }
 
     [Given(@"the project ([a-zA-Z]+) does not exists")]
     public async Task GivenTheProjectDoesNotExists(string projectId)
     {
         if (await _mongoDbDriver.ProjectRepository.ExistsAsync(p => p.Id == projectId))
-        {
             await _mongoDbDriver.ProjectRepository.DeleteAsync(projectId);
-        }
     }
 
     [Then(@"the repository fails to be created")]
@@ -72,8 +67,6 @@ public class RepositoryCreationSteps
     {
         var createdRepositoryResponses = _scenarioContext.Get<List<RestResponse>>("CreatedRepositories");
         foreach (var createdRepositoryResponse in createdRepositoryResponses)
-        {
             createdRepositoryResponse.IsSuccessful.Should().BeFalse();
-        }
     }
 }

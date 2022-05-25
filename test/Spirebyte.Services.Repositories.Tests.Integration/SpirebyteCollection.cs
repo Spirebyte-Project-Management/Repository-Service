@@ -8,6 +8,8 @@ using Xunit;
 namespace Spirebyte.Services.Repositories.Tests.Integration;
 
 [CollectionDefinition("Spirebyte collection", DisableParallelization = true)]
-public class SpirebyteCollection : ICollectionFixture<DockerDbFixture>, ICollectionFixture<MongoDbFixture<ProjectDocument, string>>, ICollectionFixture<MongoDbFixture<RepositoryDocument, string>>
+public class SpirebyteCollection : ICollectionFixture<DockerDbFixture>,
+    ICollectionFixture<MongoDbFixture<ProjectDocument, string>>,
+    ICollectionFixture<MongoDbFixture<RepositoryDocument, string>>
 {
 }

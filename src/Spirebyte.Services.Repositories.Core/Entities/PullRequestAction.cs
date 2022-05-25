@@ -7,9 +7,10 @@ public class PullRequestAction
 {
     public PullRequestAction()
     {
-        
     }
-    public PullRequestAction(DateTime createdAt, PullRequestActionType type, string message, string[] commits, Guid userId)
+
+    public PullRequestAction(DateTime createdAt, PullRequestActionType type, string message, string[] commits,
+        Guid userId)
     {
         CreatedAt = createdAt;
         Type = type;
@@ -17,6 +18,7 @@ public class PullRequestAction
         Commits = commits;
         UserId = userId;
     }
+
     public DateTime CreatedAt { get; set; }
     public PullRequestActionType Type { get; set; }
     public string Message { get; set; }

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Caching.Memory;
 using Spirebyte.Services.Repositories.Application.PullRequests.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Entities;
-using Spirebyte.Services.Repositories.Core.Repositories;
 
 namespace Spirebyte.Services.Repositories.Application.PullRequests.Services;
 

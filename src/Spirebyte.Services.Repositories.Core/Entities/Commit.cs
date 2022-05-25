@@ -6,8 +6,8 @@ public class Commit
 {
     public Commit()
     {
-        
     }
+
     public Commit(string id, string sha, string shortMessage, string message, string authorUsername,
         string committerUsername, DateTime createdAt)
     {

@@ -11,10 +11,10 @@ using Spirebyte.Services.Repositories.Tests.Shared.Helpers;
 
 namespace Spirebyte.Services.Repositories.Tests.Shared.Infrastructure.Mongo;
 
-public class MongoDbTestRepository<TEntity, TKey> : IDisposable, IMongoRepository<TEntity, TKey> where TEntity : IIdentifiable<TKey>
+public class MongoDbTestRepository<TEntity, TKey> : IDisposable, IMongoRepository<TEntity, TKey>
+    where TEntity : IIdentifiable<TKey>
 {
     private readonly IMongoClient _client;
-    public IMongoCollection<TEntity> Collection { get; }
     private readonly IMongoDatabase _database;
     private readonly string _databaseName;
 
@@ -36,15 +36,17 @@ public class MongoDbTestRepository<TEntity, TKey> : IDisposable, IMongoRepositor
         GC.SuppressFinalize(this);
     }
 
-    private void InitializeMongo()
+    public IMongoCollection<TEntity> Collection { get; }
+
+    public Task<TEntity> GetAsync(TKey id)
     {
-        new MongoDbTestRepositoryInitializer(_database, null, new MongoDbOptions())
-            .InitializeAsync().GetAwaiter().GetResult();
+        return GetAsync(e => e.Id.Equals(id));
     }
 
-    public Task<TEntity> GetAsync(TKey id) => GetAsync(e => e.Id.Equals(id));
-
-    public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate) => Collection.Find(predicate).SingleOrDefaultAsync();
+    public Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return Collection.Find(predicate).SingleOrDefaultAsync();
+    }
 
     public async Task<IReadOnlyList<TEntity>> FindAsync(
         Expression<Func<TEntity, bool>> predicate)
@@ -60,17 +62,41 @@ public class MongoDbTestRepository<TEntity, TKey> : IDisposable, IMongoRepositor
         return Collection.AsQueryable().Where(predicate).PaginateAsync(query);
     }
 
-    public Task AddAsync(TEntity entity) => Collection.InsertOneAsync(entity);
+    public Task AddAsync(TEntity entity)
+    {
+        return Collection.InsertOneAsync(entity);
+    }
 
-    public Task UpdateAsync(TEntity entity) => UpdateAsync(entity, e => e.Id.Equals(entity.Id));
+    public Task UpdateAsync(TEntity entity)
+    {
+        return UpdateAsync(entity, e => e.Id.Equals(entity.Id));
+    }
 
-    public Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate) => Collection.ReplaceOneAsync(predicate, entity);
+    public Task UpdateAsync(TEntity entity, Expression<Func<TEntity, bool>> predicate)
+    {
+        return Collection.ReplaceOneAsync(predicate, entity);
+    }
 
-    public Task DeleteAsync(TKey id) => DeleteAsync(e => e.Id.Equals(id));
+    public Task DeleteAsync(TKey id)
+    {
+        return DeleteAsync(e => e.Id.Equals(id));
+    }
 
-    public Task DeleteAsync(Expression<Func<TEntity, bool>> predicate) => Collection.DeleteOneAsync(predicate);
+    public Task DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return Collection.DeleteOneAsync(predicate);
+    }
 
-    public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate) => Collection.Find(predicate).AnyAsync();
+    public Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
+    {
+        return Collection.Find(predicate).AnyAsync();
+    }
+
+    private void InitializeMongo()
+    {
+        new MongoDbTestRepositoryInitializer(_database, null, new MongoDbOptions())
+            .InitializeAsync().GetAwaiter().GetResult();
+    }
 
     protected virtual void Dispose(bool disposing)
     {

@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Extensions.Caching.Memory;
 using Spirebyte.Services.Repositories.Application.Branches.Services.Interfaces;
-using Spirebyte.Services.Repositories.Application.Repositories.DTO;
 using Spirebyte.Services.Repositories.Core.Entities;
 
 namespace Spirebyte.Services.Repositories.Application.Branches.Services;

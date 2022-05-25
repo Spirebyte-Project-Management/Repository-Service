@@ -17,9 +17,9 @@ public static class Extensions
 {
     public static IConveyBuilder AddApplication(this IConveyBuilder builder)
     {
-        builder.Services.AddHostedService<QueuedHostedService>();  
-        builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();  
-        
+        builder.Services.AddHostedService<QueuedHostedService>();
+        builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+
         builder.Services.AddSingleton<IBranchRequestStorage, BranchRequestStorage>();
         builder.Services.AddSingleton<IPullRequestRequestStorage, PullRequestRequestStorage>();
         builder.Services.AddSingleton<IPullRequestActionRequestStorage, PullRequestActionRequestStorage>();

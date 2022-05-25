@@ -18,7 +18,8 @@ public class RepositoryPullRequestsController : BaseController
     private readonly IDispatcher _dispatcher;
     private readonly IPullRequestRequestStorage _pullRequestRequestStorage;
 
-    public RepositoryPullRequestsController(IDispatcher dispatcher, IPullRequestRequestStorage pullRequestRequestStorage)
+    public RepositoryPullRequestsController(IDispatcher dispatcher,
+        IPullRequestRequestStorage pullRequestRequestStorage)
     {
         _dispatcher = dispatcher;
         _pullRequestRequestStorage = pullRequestRequestStorage;
@@ -32,13 +33,10 @@ public class RepositoryPullRequestsController : BaseController
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> CreateAsync(CreatePullRequest command, string repositoryId)
     {
-        if (string.IsNullOrEmpty(command.Branch) || string.IsNullOrEmpty(command.Head))
-        {
-            return BadRequest();
-        }
+        if (string.IsNullOrEmpty(command.Branch) || string.IsNullOrEmpty(command.Head)) return BadRequest();
 
         await _dispatcher.SendAsync(command.Bind(q => q.RepositoryId, repositoryId));
-        
+
         return Created($"repositories/{repositoryId}", _pullRequestRequestStorage.GetPullRequest(command.ReferenceId));
     }
 }

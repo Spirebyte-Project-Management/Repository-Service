@@ -1,6 +1,4 @@
 ﻿using Spirebyte.Services.Repositories.Infrastructure.Mongo.Documents;
-using Spirebyte.Services.Repositories.Tests.Shared.Const;
-using Spirebyte.Services.Repositories.Tests.Shared.Infrastructure;
 using Spirebyte.Services.Repositories.Tests.Shared.Infrastructure.Mongo;
 
 namespace Spirebyte.Services.Repositories.Tests.Acceptance.Drivers;
@@ -12,7 +10,10 @@ public class MongoDbDriver
 
     public MongoDbDriver()
     {
-        ProjectRepository = new MongoDbTestRepository<ProjectDocument, string>("projects", SettingsConst.AcceptanceTestsSettings);
-        RepositoryRepository = new MongoDbTestRepository<RepositoryDocument, string>("repositories", SettingsConst.AcceptanceTestsSettings);
+        ProjectRepository =
+            new MongoDbTestRepository<ProjectDocument, string>("projects", SettingsConst.AcceptanceTestsSettings);
+        RepositoryRepository =
+            new MongoDbTestRepository<RepositoryDocument, string>("repositories",
+                SettingsConst.AcceptanceTestsSettings);
     }
 }
