@@ -53,6 +53,7 @@ public class CreateRepositoryHandlerTests
 
         _projectRepository.ExistsAsync(fakedRepository.ProjectId).Returns(true);
         _repositoryRepository.GetRepositoryCountOfProjectAsync(fakedRepository.ProjectId).Returns(repoCount);
+        _projectsApiHttpClient.HasPermission(default, default, default).ReturnsForAnyArgs(true);
 
         var command =
             new CreateRepository(fakedRepository.Title, fakedRepository.Description, fakedRepository.ProjectId);
