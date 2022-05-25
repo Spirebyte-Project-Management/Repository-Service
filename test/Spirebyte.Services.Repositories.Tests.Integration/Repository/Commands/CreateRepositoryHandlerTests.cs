@@ -5,6 +5,7 @@ using Convey.CQRS.Commands;
 using FluentAssertions;
 using NSubstitute;
 using Partytitan.Convey.Minio.Services.Interfaces;
+using Spirebyte.Services.Repositories.Application.Clients.Interfaces;
 using Spirebyte.Services.Repositories.Application.Projects.Exceptions;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands.Handlers;
@@ -17,6 +18,7 @@ using Spirebyte.Services.Repositories.Infrastructure.Mongo.Repositories;
 using Spirebyte.Services.Repositories.Tests.Shared;
 using Spirebyte.Services.Repositories.Tests.Shared.Fixtures;
 using Spirebyte.Services.Repositories.Tests.Shared.MockData.Entities;
+using Spirebyte.Shared.Contexts.Interfaces;
 using Xunit;
 
 namespace Spirebyte.Services.Repositories.Tests.Integration.Repository.Commands;
@@ -32,7 +34,9 @@ public class CreateRepositoryHandlerTests : IDisposable
     private readonly IRepositoryRepository _repositoryRepository;
     private readonly MongoDbFixture<ProjectDocument, string> _projectsFixture;
     private readonly MongoDbFixture<RepositoryDocument, string> _repositoryFixture;
-    
+    private readonly IProjectsApiHttpClient _projectsApiHttpClient;
+    private readonly IAppContext _appContext;
+
     private readonly IRepositoryRequestStorage _repositoryRequestStorage;
 
     public CreateRepositoryHandlerTests(MongoDbFixture<ProjectDocument, string> projectsFixture, MongoDbFixture<RepositoryDocument, string> repositoryFixture)
@@ -45,10 +49,12 @@ public class CreateRepositoryHandlerTests : IDisposable
         _messageBroker = new TestMessageBroker();
         
         _repositoryRequestStorage = Substitute.For<IRepositoryRequestStorage>();
+        _projectsApiHttpClient = Substitute.For<IProjectsApiHttpClient>();
+        _appContext = Substitute.For<IAppContext>();
         _minioService = Substitute.For<IMinioService>();
         
         _handler = new CreateRepositoryHandler(_projectRepository, _repositoryRepository, _messageBroker,
-            _repositoryRequestStorage, _minioService);
+            _repositoryRequestStorage, _minioService, _projectsApiHttpClient, _appContext);
     }
 
     [Fact]

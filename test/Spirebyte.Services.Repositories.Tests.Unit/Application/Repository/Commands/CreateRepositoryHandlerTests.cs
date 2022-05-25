@@ -5,6 +5,7 @@ using Convey.CQRS.Commands;
 using FluentAssertions;
 using NSubstitute;
 using Partytitan.Convey.Minio.Services.Interfaces;
+using Spirebyte.Services.Repositories.Application.Clients.Interfaces;
 using Spirebyte.Services.Repositories.Application.Projects.Exceptions;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands.Handlers;
@@ -13,6 +14,7 @@ using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfac
 using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Repositories;
 using Spirebyte.Services.Repositories.Tests.Shared.MockData.Entities;
+using Spirebyte.Shared.Contexts.Interfaces;
 using Xunit;
 
 namespace Spirebyte.Services.Repositories.Tests.Unit.Application.Repository.Commands;
@@ -26,6 +28,8 @@ public class CreateRepositoryHandlerTests
     private readonly IProjectRepository _projectRepository;
     private readonly IRepositoryRepository _repositoryRepository;
     private readonly IRepositoryRequestStorage _repositoryRequestStorage;
+    private readonly IProjectsApiHttpClient _projectsApiHttpClient;
+    private readonly IAppContext _appContext;
 
     public CreateRepositoryHandlerTests()
     {
@@ -34,8 +38,10 @@ public class CreateRepositoryHandlerTests
         _messageBroker = Substitute.For<IMessageBroker>();
         _repositoryRequestStorage = Substitute.For<IRepositoryRequestStorage>();
         _minioService = Substitute.For<IMinioService>();
+        _projectsApiHttpClient = Substitute.For<IProjectsApiHttpClient>();
+        _appContext = Substitute.For<IAppContext>();
         _handler = new CreateRepositoryHandler(_projectRepository, _repositoryRepository, _messageBroker,
-            _repositoryRequestStorage, _minioService);
+            _repositoryRequestStorage, _minioService, _projectsApiHttpClient, _appContext);
     }
 
     [Fact]
