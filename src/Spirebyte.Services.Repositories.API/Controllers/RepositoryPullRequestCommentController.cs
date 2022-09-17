@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Convey.WebApi;
-using Convey.WebApi.CQRS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Repositories.API.Controllers.Base;
 using Spirebyte.Services.Repositories.Application.PullRequests.Commands;
 using Spirebyte.Services.Repositories.Application.PullRequests.Services.Interfaces;
@@ -36,8 +35,8 @@ public class RepositoryPullRequestCommentController : BaseController
     {
         if (string.IsNullOrEmpty(command.Message)) return BadRequest();
 
-        command.Bind(q => q.RepositoryId, repositoryId);
-        command.Bind(q => q.PullRequestId, pullRequestId);
+        command.RepositoryId = repositoryId;
+        command.PullRequestId = pullRequestId;
 
         await _dispatcher.SendAsync(command);
 

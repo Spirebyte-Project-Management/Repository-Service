@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Repositories.Application.Repositories.Events;
 using Spirebyte.Services.Repositories.Application.Repositories.Exceptions;
-using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Repositories;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Commands.Handlers;
@@ -28,6 +28,6 @@ internal sealed class DeleteRepositoryHandler : ICommandHandler<DeleteRepository
 
         await _repositoryRepository.DeleteAsync(repository.Id);
 
-        await _messageBroker.PublishAsync(new RepositoryDeleted(repository));
+        await _messageBroker.SendAsync(new RepositoryDeleted(repository), cancellationToken);
     }
 }

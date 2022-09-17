@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
 using FluentAssertions;
 using NSubstitute;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands.Handlers;
 using Spirebyte.Services.Repositories.Application.Repositories.Events;
 using Spirebyte.Services.Repositories.Application.Repositories.Exceptions;
-using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Repositories;
 using Spirebyte.Services.Repositories.Tests.Shared.MockData.Entities;
 using Xunit;
@@ -39,7 +39,7 @@ public class DeleteRepositoryHandlerTests
         _repositoryRepository.GetAsync(fakedRepository.Id).Returns(fakedRepository);
 
         await _messageBroker
-            .PublishAsync(Arg.Do<RepositoryDeleted>(r =>
+            .SendAsync(Arg.Do<RepositoryDeleted>(r =>
             {
                 r.Should().NotBeNull();
                 r.Id.Should().Be(fakedRepository.Id);

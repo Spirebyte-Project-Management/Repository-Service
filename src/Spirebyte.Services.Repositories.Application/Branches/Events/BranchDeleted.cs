@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Repositories.Core.Entities;
 
 namespace Spirebyte.Services.Repositories.Application.Branches.Events;
 
-[Contract]
+[Message("repositories", "branch_deleted")]
 internal class BranchDeleted : IEvent
 {
     public BranchDeleted(string id, string name, bool isHead, List<Commit> commits)

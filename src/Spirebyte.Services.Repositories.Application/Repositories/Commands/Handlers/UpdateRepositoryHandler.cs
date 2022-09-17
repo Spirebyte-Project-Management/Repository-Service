@@ -1,9 +1,9 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Repositories.Application.Repositories.Events;
 using Spirebyte.Services.Repositories.Application.Repositories.Exceptions;
-using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Entities;
 using Spirebyte.Services.Repositories.Core.Repositories;
 
@@ -30,6 +30,6 @@ internal sealed class UpdateRepositoryHandler : ICommandHandler<UpdateRepository
             repository.ReferenceId, repository.Branches, repository.PullRequests, repository.CreatedAt);
         await _repositoryRepository.UpdateAsync(newRepository);
 
-        await _messageBroker.PublishAsync(new RepositoryUpdated(newRepository, repository));
+        await _messageBroker.SendAsync(new RepositoryUpdated(newRepository, repository), cancellationToken);
     }
 }

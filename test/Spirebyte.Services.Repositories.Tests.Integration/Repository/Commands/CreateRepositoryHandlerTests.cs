@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
 using FluentAssertions;
 using NSubstitute;
-using Partytitan.Convey.Minio.Services.Interfaces;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.FileStorage.S3.Services;
+using Spirebyte.Framework.Shared.Handlers;
+using Spirebyte.Framework.Tests.Shared.Fixtures;
+using Spirebyte.Framework.Tests.Shared.Infrastructure;
 using Spirebyte.Services.Repositories.Application.Clients.Interfaces;
 using Spirebyte.Services.Repositories.Application.Projects.Exceptions;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands;
@@ -14,53 +17,40 @@ using Spirebyte.Services.Repositories.Core.Entities;
 using Spirebyte.Services.Repositories.Core.Repositories;
 using Spirebyte.Services.Repositories.Infrastructure.Mongo.Documents;
 using Spirebyte.Services.Repositories.Infrastructure.Mongo.Repositories;
-using Spirebyte.Services.Repositories.Tests.Shared;
-using Spirebyte.Services.Repositories.Tests.Shared.Fixtures;
 using Spirebyte.Services.Repositories.Tests.Shared.MockData.Entities;
-using Spirebyte.Shared.Contexts.Interfaces;
 using Xunit;
 
 namespace Spirebyte.Services.Repositories.Tests.Integration.Repository.Commands;
 
-[Collection("Spirebyte collection")]
-public class CreateRepositoryHandlerTests : IDisposable
+public class CreateRepositoryHandlerTests : TestBase
 {
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly ICommandHandler<CreateRepository> _handler;
     private readonly TestMessageBroker _messageBroker;
-    private readonly IMinioService _minioService;
+    private readonly IS3Service _s3Service;
 
     private readonly IProjectRepository _projectRepository;
     private readonly IProjectsApiHttpClient _projectsApiHttpClient;
-    private readonly MongoDbFixture<ProjectDocument, string> _projectsFixture;
-    private readonly MongoDbFixture<RepositoryDocument, string> _repositoryFixture;
     private readonly IRepositoryRepository _repositoryRepository;
 
     private readonly IRepositoryRequestStorage _repositoryRequestStorage;
 
     public CreateRepositoryHandlerTests(MongoDbFixture<ProjectDocument, string> projectsFixture,
-        MongoDbFixture<RepositoryDocument, string> repositoryFixture)
+        MongoDbFixture<RepositoryDocument, string> repositoryFixture) : base(projectsFixture, repositoryFixture)
     {
-        _projectsFixture = projectsFixture;
-        _repositoryFixture = repositoryFixture;
-
-        _projectRepository = new ProjectRepository(_projectsFixture);
-        _repositoryRepository = new RepositoryRepository(_repositoryFixture);
+        _projectRepository = new ProjectRepository(ProjectsMongoDbFixture);
+        _repositoryRepository = new RepositoryRepository(RepositoriesMongoDbFixture);
         _messageBroker = new TestMessageBroker();
 
         _repositoryRequestStorage = Substitute.For<IRepositoryRequestStorage>();
         _projectsApiHttpClient = Substitute.For<IProjectsApiHttpClient>();
-        _appContext = Substitute.For<IAppContext>();
-        _minioService = Substitute.For<IMinioService>();
+        _contextAccessor = Substitute.For<IContextAccessor>();
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id", "some-message-id", "some-causation-id", Guid.NewGuid().ToString()));
+        
+        _s3Service = Substitute.For<IS3Service>();
 
         _handler = new CreateRepositoryHandler(_projectRepository, _repositoryRepository, _messageBroker,
-            _repositoryRequestStorage, _minioService, _projectsApiHttpClient, _appContext);
-    }
-
-    public void Dispose()
-    {
-        _projectsFixture.Dispose();
-        _repositoryFixture.Dispose();
+            _repositoryRequestStorage, _s3Service, _projectsApiHttpClient, _contextAccessor);
     }
 
     [Fact]
@@ -75,7 +65,7 @@ public class CreateRepositoryHandlerTests : IDisposable
         var command =
             new CreateRepository(fakedRepository.Title, fakedRepository.Description, fakedRepository.ProjectId);
 
-        var currentRepositories = await _repositoryFixture.FindAsync(r => r.ProjectId == fakedRepository.ProjectId);
+        var currentRepositories = await RepositoriesMongoDbFixture.FindAsync(r => r.ProjectId == fakedRepository.ProjectId);
         _repositoryRequestStorage.SetRepository(
             Arg.Do<Guid>(r => { r.Should().Be(command.ReferenceId); }),
             Arg.Do<Core.Entities.Repository>(r =>
@@ -99,7 +89,7 @@ public class CreateRepositoryHandlerTests : IDisposable
         var @event = _messageBroker.Events[0];
         @event.Should().BeOfType<RepositoryCreated>();
 
-        var repositories = await _repositoryFixture.FindAsync(r => r.Title == fakedRepository.Title);
+        var repositories = await RepositoriesMongoDbFixture.FindAsync(r => r.Title == fakedRepository.Title);
         repositories.Should().NotBeEmpty();
     }
 

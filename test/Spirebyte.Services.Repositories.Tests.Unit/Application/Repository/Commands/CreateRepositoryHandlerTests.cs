@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Bogus;
-using Convey.CQRS.Commands;
 using FluentAssertions;
 using NSubstitute;
-using Partytitan.Convey.Minio.Services.Interfaces;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.FileStorage.S3.Services;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Repositories.Application.Clients.Interfaces;
 using Spirebyte.Services.Repositories.Application.Projects.Exceptions;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands.Handlers;
 using Spirebyte.Services.Repositories.Application.Repositories.Events;
 using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfaces;
-using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Repositories;
 using Spirebyte.Services.Repositories.Tests.Shared.MockData.Entities;
-using Spirebyte.Shared.Contexts.Interfaces;
 using Xunit;
 
 namespace Spirebyte.Services.Repositories.Tests.Unit.Application.Repository.Commands;
 
 public class CreateRepositoryHandlerTests
 {
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly ICommandHandler<CreateRepository> _handler;
     private readonly IMessageBroker _messageBroker;
-    private readonly IMinioService _minioService;
+    private readonly IS3Service _s3Service;
 
     private readonly IProjectRepository _projectRepository;
     private readonly IProjectsApiHttpClient _projectsApiHttpClient;
@@ -37,11 +37,11 @@ public class CreateRepositoryHandlerTests
         _repositoryRepository = Substitute.For<IRepositoryRepository>();
         _messageBroker = Substitute.For<IMessageBroker>();
         _repositoryRequestStorage = Substitute.For<IRepositoryRequestStorage>();
-        _minioService = Substitute.For<IMinioService>();
+        _s3Service = Substitute.For<IS3Service>();
         _projectsApiHttpClient = Substitute.For<IProjectsApiHttpClient>();
-        _appContext = Substitute.For<IAppContext>();
+        _contextAccessor = Substitute.For<IContextAccessor>();
         _handler = new CreateRepositoryHandler(_projectRepository, _repositoryRepository, _messageBroker,
-            _repositoryRequestStorage, _minioService, _projectsApiHttpClient, _appContext);
+            _repositoryRequestStorage, _s3Service, _projectsApiHttpClient, _contextAccessor);
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public class CreateRepositoryHandlerTests
             }));
 
         await _messageBroker
-            .PublishAsync(Arg.Do<RepositoryCreated>(r =>
+            .SendAsync(Arg.Do<RepositoryCreated>(r =>
             {
                 r.Should().NotBeNull();
                 r.Id.Should().Be($"{fakedRepository.ProjectId}-repository-{repoCount + 1}");

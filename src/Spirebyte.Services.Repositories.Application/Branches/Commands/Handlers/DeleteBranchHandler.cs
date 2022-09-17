@@ -1,14 +1,13 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
-using Convey.CQRS.Events;
 using LibGit2Sharp;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Repositories.Application.Branches.Events;
 using Spirebyte.Services.Repositories.Application.Branches.Exceptions;
 using Spirebyte.Services.Repositories.Application.Repositories.Events;
 using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfaces;
-using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Helpers;
 using Spirebyte.Services.Repositories.Core.Repositories;
 using Branch = Spirebyte.Services.Repositories.Core.Entities.Branch;
@@ -56,8 +55,6 @@ internal sealed class DeleteBranchHandler : ICommandHandler<DeleteBranch>
 
         await _eventDispatcher.PublishAsync(new GitRepoUpdated(repository), cancellationToken);
 
-        await _messageBroker.PublishAsync(new BranchDeleted(new Branch(branch)));
-
-        await _eventDispatcher.PublishAsync(new GitRepoUpdated(repository), cancellationToken);
+        await _messageBroker.SendAsync(new BranchDeleted(new Branch(branch)), cancellationToken);
     }
 }

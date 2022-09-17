@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Repositories.Core.Entities;
 using Spirebyte.Services.Repositories.Core.Enums;
 
 namespace Spirebyte.Services.Repositories.Application.PullRequests.Events;
 
+[Message("repositories", "pull_request_created")]
 public class PullRequestCreated : IEvent
 {
     public PullRequestCreated(long id, string name, string description, PullRequestStatus status,

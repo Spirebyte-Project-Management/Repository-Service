@@ -4,10 +4,10 @@ using NBomber.Contracts;
 using NBomber.CSharp;
 using NBomber.Plugins.Http.CSharp;
 using NBomber.Plugins.Network.Ping;
+using Spirebyte.Framework.Tests.Shared.Const;
+using Spirebyte.Framework.Tests.Shared.Fixtures;
+using Spirebyte.Framework.Tests.Shared.Helpers;
 using Spirebyte.Services.Repositories.Application.Repositories.DTO;
-using Spirebyte.Services.Repositories.Tests.Shared.Const;
-using Spirebyte.Services.Repositories.Tests.Shared.Fixtures;
-using Spirebyte.Services.Repositories.Tests.Shared.Helpers;
 using Xunit;
 
 namespace Spirebyte.Services.Repositories.Tests.Performance.Repositories;

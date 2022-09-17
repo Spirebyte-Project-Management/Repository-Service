@@ -1,8 +1,9 @@
-﻿using Convey.CQRS.Commands;
+﻿using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Commands;
 
-[Contract]
+[Message("repositories", "delete_repository", "repositories.delete_repository")]
 public class DeleteRepository : ICommand
 {
     public DeleteRepository(string id)

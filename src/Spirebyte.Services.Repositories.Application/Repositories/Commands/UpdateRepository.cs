@@ -1,9 +1,10 @@
 ﻿using System;
-using Convey.CQRS.Commands;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Commands;
 
-[Contract]
+[Message("repositories", "update_repository", "repositories.update_repository")]
 public class UpdateRepository : ICommand
 {
     public UpdateRepository(string id, string title, string description, string projectId)

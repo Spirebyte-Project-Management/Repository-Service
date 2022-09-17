@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Convey.WebApi;
-using Convey.WebApi.CQRS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Repositories.API.Controllers.Base;
 using Spirebyte.Services.Repositories.Application.Branches.Commands;
 using Spirebyte.Services.Repositories.Application.Branches.Services.Interfaces;
@@ -34,7 +33,9 @@ public class RepositoryBranchController : BaseController
     {
         if (string.IsNullOrEmpty(command.Title)) return BadRequest();
 
-        await _dispatcher.SendAsync(command.Bind(q => q.RepositoryId, repositoryId));
+        command.RepositoryId = repositoryId;
+        
+        await _dispatcher.SendAsync(command);
 
         return Created($"repositories/{repositoryId}", _branchRequestStorage.GetBranch(command.ReferenceId));
     }

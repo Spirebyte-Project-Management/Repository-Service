@@ -1,13 +1,14 @@
-﻿using Convey;
-using Convey.CQRS.Commands;
-using Convey.CQRS.Events;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Spirebyte.Framework.Messaging;
 using Spirebyte.Services.Repositories.Application.Background;
 using Spirebyte.Services.Repositories.Application.Background.Interfaces;
 using Spirebyte.Services.Repositories.Application.Branches.Services;
 using Spirebyte.Services.Repositories.Application.Branches.Services.Interfaces;
+using Spirebyte.Services.Repositories.Application.Projects.Events.External;
 using Spirebyte.Services.Repositories.Application.PullRequests.Services;
 using Spirebyte.Services.Repositories.Application.PullRequests.Services.Interfaces;
+using Spirebyte.Services.Repositories.Application.Repositories.Commands;
 using Spirebyte.Services.Repositories.Application.Repositories.Services;
 using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfaces;
 
@@ -15,21 +16,27 @@ namespace Spirebyte.Services.Repositories.Application;
 
 public static class Extensions
 {
-    public static IConveyBuilder AddApplication(this IConveyBuilder builder)
+    public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        builder.Services.AddHostedService<QueuedHostedService>();
-        builder.Services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
+        services.AddHostedService<QueuedHostedService>();
+        services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
 
-        builder.Services.AddSingleton<IBranchRequestStorage, BranchRequestStorage>();
-        builder.Services.AddSingleton<IPullRequestRequestStorage, PullRequestRequestStorage>();
-        builder.Services.AddSingleton<IPullRequestActionRequestStorage, PullRequestActionRequestStorage>();
-        builder.Services.AddSingleton<IRepositoryRequestStorage, RepositoryRequestStorage>();
-        builder.Services.AddSingleton<IRepositoryService, RepositoryService>();
+        services.AddSingleton<IBranchRequestStorage, BranchRequestStorage>();
+        services.AddSingleton<IPullRequestRequestStorage, PullRequestRequestStorage>();
+        services.AddSingleton<IPullRequestActionRequestStorage, PullRequestActionRequestStorage>();
+        services.AddSingleton<IRepositoryRequestStorage, RepositoryRequestStorage>();
+        
+        services.AddTransient<IRepositoryService, RepositoryService>();
+        
+        return services;
+    }
 
-        return builder
-            .AddCommandHandlers()
-            .AddEventHandlers()
-            .AddInMemoryCommandDispatcher()
-            .AddInMemoryEventDispatcher();
+    public static IApplicationBuilder UseApplication(this IApplicationBuilder app)
+    {
+        app.Subscribe()
+            .Command<CreateRepository>()
+            .Event<ProjectCreated>();
+
+        return app;
     }
 }

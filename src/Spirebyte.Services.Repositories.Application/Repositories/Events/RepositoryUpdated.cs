@@ -1,12 +1,13 @@
 ﻿using System;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Repositories.Core.Entities;
 using Spirebyte.Shared.Changes;
 using Spirebyte.Shared.Changes.ValueObjects;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Events;
 
-[Contract]
+[Message("repositories", "repository_updated")]
 internal class RepositoryUpdated : IEvent
 {
     public RepositoryUpdated(string id, string title, string description,

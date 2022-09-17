@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Repositories.Tests.Shared.Helpers;
+﻿using Spirebyte.Framework.Tests.Shared.Helpers;
 
 namespace Spirebyte.Services.Repositories.Tests.Acceptance.Hooks;
 

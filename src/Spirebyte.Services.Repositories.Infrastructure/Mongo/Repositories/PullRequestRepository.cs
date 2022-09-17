@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Convey.Persistence.MongoDB;
+using Spirebyte.Framework.DAL.MongoDb.Interfaces;
 using Spirebyte.Services.Repositories.Core.Entities;
 using Spirebyte.Services.Repositories.Core.Repositories;
 using Spirebyte.Services.Repositories.Infrastructure.Mongo.Documents;
@@ -16,7 +16,7 @@ public class PullRequestRepository : IPullRequestRepository
         _repository = repository;
     }
 
-    public async Task<PullRequest> GetAsync(string repositoryId, int pullRequestId)
+    public async Task<PullRequest> GetAsync(string repositoryId, long pullRequestId)
     {
         var repository = await _repository.GetAsync(x => x.Id == repositoryId);
         var pullRequest = repository.PullRequests.Find(x => x.Id == pullRequestId);
@@ -31,7 +31,7 @@ public class PullRequestRepository : IPullRequestRepository
         return repository.PullRequests.Count;
     }
 
-    public async Task<bool> ExistsAsync(string repositoryId, int pullRequestId)
+    public async Task<bool> ExistsAsync(string repositoryId, long pullRequestId)
     {
         var repository = await _repository.GetAsync(x => x.Id == repositoryId);
 
@@ -54,7 +54,7 @@ public class PullRequestRepository : IPullRequestRepository
         await _repository.UpdateAsync(repository);
     }
 
-    public async Task DeleteAsync(string repositoryId, int pullRequestId)
+    public async Task DeleteAsync(string repositoryId, long pullRequestId)
     {
         var repository = await _repository.GetAsync(x => x.Id == repositoryId);
         var pullRequest = repository.PullRequests.Find(x => x.Id == pullRequestId);

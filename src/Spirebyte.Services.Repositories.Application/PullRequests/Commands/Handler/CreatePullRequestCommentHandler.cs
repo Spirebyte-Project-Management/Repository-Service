@@ -1,33 +1,33 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
 using LibGit2Sharp;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Repositories.Application.PullRequests.Events;
 using Spirebyte.Services.Repositories.Application.PullRequests.Exceptions;
 using Spirebyte.Services.Repositories.Application.PullRequests.Services.Interfaces;
-using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Entities;
 using Spirebyte.Services.Repositories.Core.Enums;
 using Spirebyte.Services.Repositories.Core.Repositories;
-using Spirebyte.Shared.Contexts.Interfaces;
 
 namespace Spirebyte.Services.Repositories.Application.PullRequests.Commands.Handler;
 
 public class CreatePullRequestCommentHandler : ICommandHandler<CreatePullRequestComment>
 {
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly IMessageBroker _messageBroker;
     private readonly IPullRequestActionRequestStorage _pullRequestActionRequestStorage;
     private readonly IPullRequestRepository _pullRequestRepository;
     private readonly IRepositoryRepository _repositoryRepository;
 
-    public CreatePullRequestCommentHandler(IRepositoryRepository repositoryRepository, IAppContext appContext,
+    public CreatePullRequestCommentHandler(IRepositoryRepository repositoryRepository, IContextAccessor contextAccessor,
         IMessageBroker messageBroker, IPullRequestRepository pullRequestRepository,
         IPullRequestActionRequestStorage pullRequestActionRequestStorage)
     {
         _repositoryRepository = repositoryRepository;
-        _appContext = appContext;
+        _contextAccessor = contextAccessor;
         _messageBroker = messageBroker;
         _pullRequestRepository = pullRequestRepository;
         _pullRequestActionRequestStorage = pullRequestActionRequestStorage;
@@ -42,7 +42,7 @@ public class CreatePullRequestCommentHandler : ICommandHandler<CreatePullRequest
         if (pullRequest is null) throw new PullRequestNotFoundException(command.RepositoryId, command.PullRequestId);
 
         var pullRequestAction = new PullRequestAction(DateTime.Now, PullRequestActionType.Comment, command.Message,
-            Array.Empty<string>(), _appContext.Identity.Id);
+            Array.Empty<string>(), _contextAccessor.Context.GetUserId());
 
         pullRequest.AddAction(pullRequestAction);
 
@@ -50,7 +50,7 @@ public class CreatePullRequestCommentHandler : ICommandHandler<CreatePullRequest
 
         _pullRequestActionRequestStorage.SetPullRequestAction(command.ReferenceId, pullRequestAction);
 
-        await _messageBroker.PublishAsync(new PullRequestCommentCreated(pullRequestAction, repository.Id,
-            pullRequest.Id));
+        await _messageBroker.SendAsync(new PullRequestCommentCreated(pullRequestAction, repository.Id,
+            pullRequest.Id), cancellationToken);
     }
 }

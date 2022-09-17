@@ -2,46 +2,45 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
-using Partytitan.Convey.Minio.Services.Interfaces;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.FileStorage.S3.Services;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Repositories.Application.Clients.Interfaces;
 using Spirebyte.Services.Repositories.Application.Exceptions;
 using Spirebyte.Services.Repositories.Application.Projects.Exceptions;
 using Spirebyte.Services.Repositories.Application.Repositories.Events;
 using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfaces;
-using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Constants;
 using Spirebyte.Services.Repositories.Core.Entities;
 using Spirebyte.Services.Repositories.Core.Helpers;
 using Spirebyte.Services.Repositories.Core.Repositories;
-using Spirebyte.Shared.Contexts.Interfaces;
 using Branch = Spirebyte.Services.Repositories.Core.Entities.Branch;
 using Repository = LibGit2Sharp.Repository;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Commands.Handlers;
 
-// Simple wrapper
 internal sealed class CreateRepositoryHandler : ICommandHandler<CreateRepository>
 {
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly IMessageBroker _messageBroker;
-    private readonly IMinioService _minioService;
+    private readonly IS3Service _s3Service;
     private readonly IProjectRepository _projectRepository;
     private readonly IProjectsApiHttpClient _projectsApiHttpClient;
     private readonly IRepositoryRepository _repositoryRepository;
     private readonly IRepositoryRequestStorage _repositoryRequestStorage;
 
     public CreateRepositoryHandler(IProjectRepository projectRepository, IRepositoryRepository repositoryRepository,
-        IMessageBroker messageBroker, IRepositoryRequestStorage repositoryRequestStorage, IMinioService minioService,
-        IProjectsApiHttpClient projectsApiHttpClient, IAppContext appContext)
+        IMessageBroker messageBroker, IRepositoryRequestStorage repositoryRequestStorage, IS3Service s3Service,
+        IProjectsApiHttpClient projectsApiHttpClient, IContextAccessor contextAccessor)
     {
         _projectRepository = projectRepository;
         _repositoryRepository = repositoryRepository;
         _messageBroker = messageBroker;
         _repositoryRequestStorage = repositoryRequestStorage;
-        _minioService = minioService;
+        _s3Service = s3Service;
         _projectsApiHttpClient = projectsApiHttpClient;
-        _appContext = appContext;
+        _contextAccessor = contextAccessor;
     }
 
     public async Task HandleAsync(CreateRepository command, CancellationToken cancellationToken = default)
@@ -50,7 +49,7 @@ internal sealed class CreateRepositoryHandler : ICommandHandler<CreateRepository
             throw new ProjectNotFoundException(command.ProjectId);
 
         if (!await _projectsApiHttpClient.HasPermission(RepositoryPermissionKeys.CreateRepositories,
-                _appContext.Identity.Id,
+                _contextAccessor.Context.GetUserId(),
                 command.ProjectId)) throw new ActionNotAllowedException();
 
         var repositoryCount = await _repositoryRepository.GetRepositoryCountOfProjectAsync(command.ProjectId);
@@ -69,9 +68,9 @@ internal sealed class CreateRepositoryHandler : ICommandHandler<CreateRepository
             command.ProjectId, referenceId, branches, pullRequests, command.CreatedAt);
         await _repositoryRepository.AddAsync(repository);
 
-        await _minioService.UploadDirAsync(repoPath, $"{command.ProjectId}/{repositoryId}");
+        await _s3Service.UploadDirAsync(repoPath, $"{command.ProjectId}/{repositoryId}");
 
-        await _messageBroker.PublishAsync(new RepositoryCreated(repository));
+        await _messageBroker.SendAsync(new RepositoryCreated(repository), cancellationToken);
 
         _repositoryRequestStorage.SetRepository(command.ReferenceId, repository);
     }

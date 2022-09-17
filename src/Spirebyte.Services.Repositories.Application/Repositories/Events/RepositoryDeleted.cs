@@ -1,10 +1,11 @@
 ﻿using System;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Repositories.Core.Entities;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Events;
 
-[Contract]
+[Message("repositories", "repository_deleted")]
 internal class RepositoryDeleted : IEvent
 {
     public RepositoryDeleted(string id, string title, string description,

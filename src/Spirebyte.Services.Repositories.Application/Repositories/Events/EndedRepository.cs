@@ -1,6 +1,7 @@
-﻿using Convey.CQRS.Events;
+﻿using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Events;
 
-[Contract]
+[Message("repositories", "ended_repository")]
 internal record EndedRepository(string RepositoryId, string ProjectId) : IEvent;

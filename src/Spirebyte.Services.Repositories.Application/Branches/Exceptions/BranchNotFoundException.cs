@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Repositories.Application.Exceptions.Base;
+﻿using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Repositories.Application.Branches.Exceptions;
 
@@ -9,6 +9,6 @@ public class BranchNotFoundException : AppException
         Name = name;
     }
 
-    public override string Code { get; } = "branch_not_found";
+    public string Code { get; } = "branch_not_found";
     public string Name { get; }
 }

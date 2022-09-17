@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Repositories.Application.Exceptions.Base;
+﻿using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Exceptions;
 
@@ -9,6 +9,6 @@ public class RepositoryNotFoundException : AppException
         Key = key;
     }
 
-    public override string Code { get; } = "Repository_not_found";
+    public string Code { get; } = "Repository_not_found";
     public string Key { get; }
 }

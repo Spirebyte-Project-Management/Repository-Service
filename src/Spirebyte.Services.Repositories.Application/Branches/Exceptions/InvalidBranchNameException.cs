@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Repositories.Application.Exceptions.Base;
+﻿using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Repositories.Application.Branches.Exceptions;
 
@@ -9,6 +9,6 @@ public class InvalidBranchNameException : AppException
         Key = key;
     }
 
-    public override string Code { get; } = "invalid_branch_name";
+    public string Code { get; } = "invalid_branch_name";
     public string Key { get; }
 }

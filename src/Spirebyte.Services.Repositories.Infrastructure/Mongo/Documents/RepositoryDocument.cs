@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Convey.Types;
+using Spirebyte.Framework.Shared.Types;
 using Spirebyte.Services.Repositories.Core.Entities;
 
 namespace Spirebyte.Services.Repositories.Infrastructure.Mongo.Documents;

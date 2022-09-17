@@ -1,10 +1,12 @@
 ﻿using System;
-using Convey.CQRS.Events;
+using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 using Spirebyte.Services.Repositories.Core.Entities;
 using Spirebyte.Services.Repositories.Core.Enums;
 
 namespace Spirebyte.Services.Repositories.Application.PullRequests.Events;
 
+[Message("repositories", "pull_request_comment_created")]
 public class PullRequestCommentCreated : IEvent
 {
     public PullRequestCommentCreated(DateTime createdAt, PullRequestActionType type, string message, string[] commits,

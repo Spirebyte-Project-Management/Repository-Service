@@ -1,6 +1,7 @@
-﻿using Convey.CQRS.Commands;
+﻿using Spirebyte.Framework.Shared.Abstractions;
+using Spirebyte.Framework.Shared.Attributes;
 
 namespace Spirebyte.Services.Repositories.Application.Branches.Commands;
 
-[Contract]
+[Message("repositories", "delete_branch", "repositories.delete_branch")]
 public record DeleteBranch(string BranchId, string RepositoryId) : ICommand;

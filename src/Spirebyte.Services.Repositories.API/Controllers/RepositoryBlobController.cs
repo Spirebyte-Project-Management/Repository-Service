@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Convey.WebApi;
-using Convey.WebApi.CQRS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Repositories.API.Controllers.Base;
 using Spirebyte.Services.Repositories.Application.Repositories.DTO;
 using Spirebyte.Services.Repositories.Application.Repositories.Queries;
@@ -34,6 +33,7 @@ public class RepositoryBlobController : BaseController
         if (string.IsNullOrEmpty(query.Path)) return BadRequest();
 
         query.Path = Uri.UnescapeDataString(query.Path ?? string.Empty);
-        return Ok(await _dispatcher.QueryAsync(query.Bind(q => q.RepositoryId, repositoryId)));
+        query.RepositoryId = repositoryId;
+        return Ok(await _dispatcher.QueryAsync(query));
     }
 }

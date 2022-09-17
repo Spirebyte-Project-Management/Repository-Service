@@ -2,9 +2,10 @@
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Convey.CQRS.Commands;
-using Convey.CQRS.Events;
 using LibGit2Sharp;
+using Spirebyte.Framework.Contexts;
+using Spirebyte.Framework.Messaging.Brokers;
+using Spirebyte.Framework.Shared.Handlers;
 using Spirebyte.Services.Repositories.Application.Branches.Events;
 using Spirebyte.Services.Repositories.Application.Branches.Exceptions;
 using Spirebyte.Services.Repositories.Application.Branches.Services.Interfaces;
@@ -12,11 +13,9 @@ using Spirebyte.Services.Repositories.Application.Clients.Interfaces;
 using Spirebyte.Services.Repositories.Application.Exceptions;
 using Spirebyte.Services.Repositories.Application.Repositories.Events;
 using Spirebyte.Services.Repositories.Application.Repositories.Services.Interfaces;
-using Spirebyte.Services.Repositories.Application.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Constants;
 using Spirebyte.Services.Repositories.Core.Helpers;
 using Spirebyte.Services.Repositories.Core.Repositories;
-using Spirebyte.Shared.Contexts.Interfaces;
 using RepositoryNotFoundException =
     Spirebyte.Services.Repositories.Application.Repositories.Exceptions.RepositoryNotFoundException;
 
@@ -27,7 +26,7 @@ internal sealed class CreateBranchHandler : ICommandHandler<CreateBranch>
     private const string BranchNameRegex =
         @"[^\000-\037\177 ~^:?*[]+(?<!\.lock)(?<!\/)(?<!\.)$";
 
-    private readonly IAppContext _appContext;
+    private readonly IContextAccessor _contextAccessor;
     private readonly IBranchRequestStorage _branchRequestStorage;
     private readonly IEventDispatcher _eventDispatcher;
 
@@ -38,7 +37,7 @@ internal sealed class CreateBranchHandler : ICommandHandler<CreateBranch>
 
     public CreateBranchHandler(IRepositoryService repositoryService, IRepositoryRepository repositoryRepository,
         IMessageBroker messageBroker, IBranchRequestStorage branchRequestStorage, IEventDispatcher eventDispatcher,
-        IProjectsApiHttpClient projectsApiHttpClient, IAppContext appContext)
+        IProjectsApiHttpClient projectsApiHttpClient, IContextAccessor contextAccessor)
     {
         _repositoryService = repositoryService;
         _repositoryRepository = repositoryRepository;
@@ -46,7 +45,7 @@ internal sealed class CreateBranchHandler : ICommandHandler<CreateBranch>
         _branchRequestStorage = branchRequestStorage;
         _eventDispatcher = eventDispatcher;
         _projectsApiHttpClient = projectsApiHttpClient;
-        _appContext = appContext;
+        _contextAccessor = contextAccessor;
     }
 
     public async Task HandleAsync(CreateBranch command, CancellationToken cancellationToken = default)
@@ -56,7 +55,7 @@ internal sealed class CreateBranchHandler : ICommandHandler<CreateBranch>
         if (repository is null) throw new RepositoryNotFoundException(command.RepositoryId);
 
         if (!await _projectsApiHttpClient.HasPermission(RepositoryPermissionKeys.CreateBranches,
-                _appContext.Identity.Id,
+                _contextAccessor.Context.GetUserId(),
                 repository.ProjectId)) throw new ActionNotAllowedException();
 
         // check branch name
@@ -79,7 +78,7 @@ internal sealed class CreateBranchHandler : ICommandHandler<CreateBranch>
         await _repositoryRepository.UpdateAsync(repository);
 
         var createdBranch = repository.Branches.FirstOrDefault(b => b.Name == command.Title);
-        await _messageBroker.PublishAsync(new BranchCreated(createdBranch));
+        await _messageBroker.SendAsync(new BranchCreated(createdBranch), cancellationToken);
         _branchRequestStorage.SetBranch(command.ReferenceId, createdBranch);
 
         await _eventDispatcher.PublishAsync(new GitRepoUpdated(repository), cancellationToken);

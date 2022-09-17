@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using Spirebyte.Services.Repositories.Core.Exceptions.Base;
+using Spirebyte.Framework.Shared.Exceptions;
 
 namespace Spirebyte.Services.Repositories.Core.Exceptions;
 
@@ -12,11 +12,6 @@ public class InvalidProjectIdException : DomainException
         ProjectId = projectId;
     }
 
-    protected InvalidProjectIdException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
-    {
-    }
-
     public string ProjectId { get; }
-    public override string Code { get; } = "invalid_project_id";
+    public string Code { get; } = "invalid_project_id";
 }

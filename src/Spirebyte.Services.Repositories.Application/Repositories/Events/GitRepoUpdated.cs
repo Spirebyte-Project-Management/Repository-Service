@@ -1,4 +1,4 @@
-﻿using Convey.CQRS.Events;
+﻿using Spirebyte.Framework.Shared.Abstractions;
 using Spirebyte.Services.Repositories.Core.Entities;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Events;

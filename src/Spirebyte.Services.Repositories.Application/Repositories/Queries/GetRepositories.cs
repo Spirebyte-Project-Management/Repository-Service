@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Convey.CQRS.Queries;
+using Spirebyte.Framework.Shared.Abstractions;
 using Spirebyte.Services.Repositories.Application.Repositories.DTO;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Queries;

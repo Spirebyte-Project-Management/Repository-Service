@@ -1,4 +1,4 @@
-﻿using Spirebyte.Services.Repositories.Tests.Shared.Fixtures;
+﻿using Spirebyte.Framework.Tests.Shared.Fixtures;
 using Xunit;
 
 namespace Spirebyte.Services.Repositories.Tests.Performance;

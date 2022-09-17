@@ -1,5 +1,5 @@
-﻿using Spirebyte.Services.Repositories.Infrastructure.Mongo.Documents;
-using Spirebyte.Services.Repositories.Tests.Shared.Fixtures;
+﻿using Spirebyte.Framework.Tests.Shared.Fixtures;
+using Spirebyte.Services.Repositories.Infrastructure.Mongo.Documents;
 using Xunit;
 
 [assembly: CollectionBehavior(MaxParallelThreads = 1, DisableTestParallelization = true)]
@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Spirebyte.Services.Repositories.Tests.Integration;
 
-[CollectionDefinition("Spirebyte collection", DisableParallelization = true)]
+[CollectionDefinition(nameof(SpirebyteCollection), DisableParallelization = true)]
 public class SpirebyteCollection : ICollectionFixture<DockerDbFixture>,
     ICollectionFixture<MongoDbFixture<ProjectDocument, string>>,
     ICollectionFixture<MongoDbFixture<RepositoryDocument, string>>
