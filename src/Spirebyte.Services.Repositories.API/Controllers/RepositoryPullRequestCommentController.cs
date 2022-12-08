@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Spirebyte.Framework.API;
 using Spirebyte.Framework.Shared.Handlers;
-using Spirebyte.Services.Repositories.API.Controllers.Base;
 using Spirebyte.Services.Repositories.Application.PullRequests.Commands;
 using Spirebyte.Services.Repositories.Application.PullRequests.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Constants;
@@ -12,7 +12,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Spirebyte.Services.Repositories.API.Controllers;
 
 [Route("repositories/{repositoryId}/pullRequests/{pullRequestId}/comments")]
-public class RepositoryPullRequestCommentController : BaseController
+public class RepositoryPullRequestCommentController : ApiController
 {
     private readonly IDispatcher _dispatcher;
     private readonly IPullRequestActionRequestStorage _pullRequestActionRequestStorage;
@@ -25,11 +25,9 @@ public class RepositoryPullRequestCommentController : BaseController
     }
 
     [HttpPost]
-    [Authorize(ApiScopes.Write)]
+    [Authorize(ApiScopes.RepositoriesPullRequestsWrite)]
     [SwaggerOperation("Create Pull request comment")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> CreateAsync(CreatePullRequestComment command, string repositoryId,
         long pullRequestId)
     {

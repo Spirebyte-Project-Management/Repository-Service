@@ -2,11 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Highlight" Version="4.0.0" />
-        <PackageReference Include="Spirebyte.Shared" Version="1.0.20" />
+        <PackageReference Include="Spirebyte.Shared" Version="1.0.22" />
     </ItemGroup>
 
     <ItemGroup>

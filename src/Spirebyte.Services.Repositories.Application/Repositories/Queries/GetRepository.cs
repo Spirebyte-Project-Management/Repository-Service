@@ -3,7 +3,7 @@ using Spirebyte.Services.Repositories.Application.Repositories.DTO;
 
 namespace Spirebyte.Services.Repositories.Application.Repositories.Queries;
 
-public class GetRepository : IQuery<RepositoryDto>
+public class GetRepository : IQuery<RepositoryDto?>
 {
     public GetRepository()
     {

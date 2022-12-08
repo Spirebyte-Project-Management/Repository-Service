@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Spirebyte.Framework.API;
 using Spirebyte.Framework.Shared.Handlers;
-using Spirebyte.Services.Repositories.API.Controllers.Base;
 using Spirebyte.Services.Repositories.Application.Branches.Commands;
 using Spirebyte.Services.Repositories.Application.Branches.Services.Interfaces;
 using Spirebyte.Services.Repositories.Core.Constants;
@@ -12,7 +12,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Spirebyte.Services.Repositories.API.Controllers;
 
 [Route("repositories/{repositoryId}/branches")]
-public class RepositoryBranchController : BaseController
+public class RepositoryBranchController : ApiController
 {
     private readonly IBranchRequestStorage _branchRequestStorage;
     private readonly IDispatcher _dispatcher;
@@ -24,11 +24,9 @@ public class RepositoryBranchController : BaseController
     }
 
     [HttpPost]
-    [Authorize(ApiScopes.Write)]
+    [Authorize(ApiScopes.RepositoriesWrite)]
     [SwaggerOperation("Create Branch")]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> CreateAsync(CreateBranch command, string repositoryId)
     {
         if (string.IsNullOrEmpty(command.Title)) return BadRequest();
@@ -41,11 +39,9 @@ public class RepositoryBranchController : BaseController
     }
 
     [HttpDelete("{*branchId}")]
-    [Authorize(ApiScopes.Delete)]
+    [Authorize(ApiScopes.RepositoriesDelete)]
     [SwaggerOperation("Delete Branch")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> DeleteAsync(string repositoryId, string branchId)
     {
         await _dispatcher.SendAsync(new DeleteBranch(branchId, repositoryId));

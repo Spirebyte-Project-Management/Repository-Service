@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Spirebyte.Framework.API;
 using Spirebyte.Framework.Shared.Handlers;
-using Spirebyte.Services.Repositories.API.Controllers.Base;
 using Spirebyte.Services.Repositories.Application.Repositories.Commands;
 using Spirebyte.Services.Repositories.Application.Repositories.DTO;
 using Spirebyte.Services.Repositories.Application.Repositories.Queries;
@@ -18,7 +18,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Spirebyte.Services.Repositories.API.Controllers;
 
 [Authorize]
-public class RepositoriesController : BaseController
+public class RepositoriesController : ApiController
 {
     private const string RepositoriesCacheKey = "repositories:";
     private readonly IDistributedCache _cache;
@@ -34,11 +34,9 @@ public class RepositoriesController : BaseController
     }
 
     [HttpGet]
-    [Authorize(ApiScopes.Read)]
+    [Authorize(ApiScopes.RepositoriesRead)]
     [SwaggerOperation("Browse Repositories")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<IEnumerable<RepositoryDto>>> BrowseAsync([FromQuery] GetRepositories query)
     {
         var cacheKey = RepositoriesCacheKey + query.ProjectId;
@@ -55,19 +53,17 @@ public class RepositoriesController : BaseController
     }
 
     [HttpGet("{repositoryId}")]
-    [Authorize(ApiScopes.Read)]
+    [Authorize(ApiScopes.RepositoriesRead)]
     [SwaggerOperation("Get Repository")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<RepositoryDto>> GetAsync(string repositoryId)
+    public async Task<ActionResult<RepositoryDto?>> GetAsync(string repositoryId)
     {
-        return OkOrNotFound(await _dispatcher.QueryAsync(new GetRepository(repositoryId)));
+        return await _dispatcher.QueryAsync(new GetRepository(repositoryId));
     }
 
     [HttpPost]
-    [Authorize(ApiScopes.Write)]
+    [Authorize(ApiScopes.RepositoriesWrite)]
     [SwaggerOperation("Create Repository")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -84,7 +80,7 @@ public class RepositoriesController : BaseController
 
 
     [HttpPut("{repositoryId}")]
-    [Authorize(ApiScopes.Write)]
+    [Authorize(ApiScopes.RepositoriesWrite)]
     [SwaggerOperation("Update Repository")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -101,7 +97,7 @@ public class RepositoriesController : BaseController
     }
 
     [HttpDelete("{repositoryId}")]
-    [Authorize(ApiScopes.Delete)]
+    [Authorize(ApiScopes.RepositoriesDelete)]
     [SwaggerOperation("Delete Repository")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
