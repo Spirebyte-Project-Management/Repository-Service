@@ -56,7 +56,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test --blame --no-restore --verbosity normal --logger "trx;LogFileName=testResults.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=opencover.xml
+      run: dotnet test --filter FullyQualifiedName!~Performance --blame --no-restore --verbosity normal --logger "trx;LogFileName=testResults.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=opencover.xml
      
     - name: End Sonar scan
       env:

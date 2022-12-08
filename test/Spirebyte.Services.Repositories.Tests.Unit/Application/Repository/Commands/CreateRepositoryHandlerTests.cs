@@ -40,6 +40,7 @@ public class CreateRepositoryHandlerTests
         _s3Service = Substitute.For<IS3Service>();
         _projectsApiHttpClient = Substitute.For<IProjectsApiHttpClient>();
         _contextAccessor = Substitute.For<IContextAccessor>();
+        _contextAccessor.Context.Returns(new Context("some-activity-id", "some-trace-id", "some-correlation-id", "some-message-id", "some-causation-id", Guid.NewGuid().ToString()));
         _handler = new CreateRepositoryHandler(_projectRepository, _repositoryRepository, _messageBroker,
             _repositoryRequestStorage, _s3Service, _projectsApiHttpClient, _contextAccessor);
     }

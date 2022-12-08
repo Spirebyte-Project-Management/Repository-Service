@@ -46,7 +46,7 @@ public class DeleteRepositoryHandlerTests
                 r.Title.Should().Be(fakedRepository.Title);
                 r.Description.Should().Be(fakedRepository.Description);
                 r.ProjectId.Should().Be(fakedRepository.ProjectId);
-                r.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMinutes(1));
+                r.CreatedAt.Should().BeCloseTo(fakedRepository.CreatedAt, TimeSpan.FromMinutes(1));
             }));
 
         await _handler
