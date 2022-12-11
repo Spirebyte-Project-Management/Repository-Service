@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Spirebyte.Framework.DAL.MongoDb;
+using Spirebyte.Framework.DAL.Redis;
 using Spirebyte.Services.Repositories.Application.Clients.Interfaces;
 using Spirebyte.Services.Repositories.Core.Repositories;
 using Spirebyte.Services.Repositories.Infrastructure.Clients.HTTP;
@@ -17,6 +18,7 @@ public static class Extensions
         services.AddTransient<IIdentityApiHttpClient, IdentityApiHttpClient>();
         services.AddTransient<IProjectsApiHttpClient, ProjectsApiHttpClient>();
 
+        services.AddRedis(configuration);
         services.AddMongo(configuration)
             .AddMongoRepository<ProjectDocument, string>("projects")
             .AddMongoRepository<RepositoryDocument, string>("repositories");
